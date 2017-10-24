@@ -19,7 +19,10 @@ void ACameraDirector::BeginPlay()
 {
 	 Super::BeginPlay();
 
-	 if (HideInGame) { DisableActor(HideInGame); }
+	 if (HideInGame) 
+	 { 
+		 DisableActor(HideInGame); 
+	}
      
 }
 
