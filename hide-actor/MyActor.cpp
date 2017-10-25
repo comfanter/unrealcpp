@@ -10,18 +10,18 @@
 ACameraDirector::ACameraDirector()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	 PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
 // Called when the game starts or when spawned
 void ACameraDirector::BeginPlay()
 {
-	 Super::BeginPlay();
+	Super::BeginPlay();
 
-	 if (HideInGame) 
-	 { 
-		 DisableActor(HideInGame); 
+	if (HideInGame) 
+	{ 
+		DisableActor(HideInGame); 
 	}
      
 }
@@ -32,8 +32,8 @@ void ACameraDirector::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ACameraDirector::DisableActor(bool toHide) {
-
+void ACameraDirector::DisableActor(bool toHide) 
+{
 	// Hides visible components
 	SetActorHiddenInGame(toHide);
 
