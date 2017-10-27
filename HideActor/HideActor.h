@@ -7,25 +7,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CameraDirector.generated.h"
+#include "HideActor.generated.h"
 
 UCLASS()
-class CPPSANDBOX_API MyActor : public AActor
+class UNREALCPP_API AHideActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	MyActor();
+	AHideActor();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	AActor* ActorOne;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* SuperMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Disable")
 	bool HideInGame;

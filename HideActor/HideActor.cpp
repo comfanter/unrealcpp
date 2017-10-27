@@ -4,18 +4,19 @@
 // https://severallevels.io/
 
 #include "CameraDirector.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
-ACameraDirector::ACameraDirector()
+AHideActor::AHideActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SuperMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Super Mesh"));
+	
 }
 
 // Called when the game starts or when spawned
-void ACameraDirector::BeginPlay()
+void AHideActor::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -23,16 +24,17 @@ void ACameraDirector::BeginPlay()
 	{ 
 		DisableActor(HideInGame); 
 	}
-     
+	
 }
 
 // Called every frame
-void ACameraDirector::Tick(float DeltaTime)
+void AHideActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
-void ACameraDirector::DisableActor(bool toHide) 
+void AHideActor::DisableActor(bool toHide) 
 {
 	// Hides visible components
 	SetActorHiddenInGame(toHide);
