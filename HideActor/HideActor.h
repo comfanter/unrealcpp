@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// UE4 Version 4.18
+// Harrison McGuire
+// https://github.com/Harrison1
+// https://severallevels.io/
 
 #pragma once
 
