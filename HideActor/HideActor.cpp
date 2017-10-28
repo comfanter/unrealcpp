@@ -3,7 +3,7 @@
 // https://github.com/Harrison1
 // https://severallevels.io/
 
-#include "CameraDirector.h"
+#include "HideActor.h"
 
 // Sets default values
 AHideActor::AHideActor()
