@@ -1,6 +1,6 @@
-// UE4 Version 4.18
 // Harrison McGuire
-// https://github.com/Harrison1
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 #include "HideActor.h"
@@ -10,8 +10,6 @@ AHideActor::AHideActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	SuperMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Super Mesh"));
 	
 }
 

@@ -1,6 +1,6 @@
-// UE4 Version 4.18
 // Harrison McGuire
-// https://github.com/Harrison1
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 #pragma once
@@ -25,9 +25,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* SuperMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Disable")
 	bool HideInGame;

@@ -1,8 +1,7 @@
-// UE4 Version 4.18
 // Harrison McGuire
-// https://github.com/Harrison1
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
-
 
 #pragma once
 

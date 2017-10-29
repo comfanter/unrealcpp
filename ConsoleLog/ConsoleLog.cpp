@@ -1,6 +1,6 @@
-// UE4 Version 4.18
 // Harrison McGuire
-// https://github.com/Harrison1
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 // define a print message function to print to screen
@@ -22,7 +22,11 @@ void AConsoleLog::BeginPlay()
 
 	// Standard way to log to console.
 	UE_LOG(LogTemp, Warning, TEXT("I just started running"));
+
+	// Log to Screen
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Screen Message"));
+
+	// Use the shortcut defined above
 	print("Hello Unreal");	
 	
 }
@@ -32,7 +36,5 @@ void AConsoleLog::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Print 'Hello Unreal' on to the screen on every frame
-	// print("Hello Unreal");
 }
 

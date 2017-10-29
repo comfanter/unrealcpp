@@ -1,6 +1,6 @@
-// UE4 Version 4.18
 // Harrison McGuire
-// https://github.com/Harrison1
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
@@ -19,10 +19,12 @@ void AMyTriggerBox::BeginPlay()
 
 void AMyTriggerBox::OnTriggerEnter(AActor* Box, AActor* OverlappingActor)
 {
+    // print to screen using above defined method when actor enters trigger box
     printFString("Overlapped Actor = %s", *OverlappingActor->GetName());    
 }
 
 void AMyTriggerBox::OnTriggerExit(AActor* Box, AActor* OverlappingActor)
 {
+    // print to screen using above defined method when actor leaves trigger box
     print("Overlap Ended");
 }
