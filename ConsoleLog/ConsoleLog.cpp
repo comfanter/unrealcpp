@@ -21,7 +21,9 @@ void AConsoleLog::BeginPlay()
 	Super::BeginPlay();
 
 	// Standard way to log to console.
-	UE_LOG(LogTemp, Warning, TEXT("I just started running"));	
+	UE_LOG(LogTemp, Warning, TEXT("I just started running"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Screen Message"));
+	print("Hello Unreal");	
 	
 }
 
@@ -31,6 +33,6 @@ void AConsoleLog::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Print 'Hello Unreal' on to the screen on every frame
-	print("Hello Unreal");
+	// print("Hello Unreal");
 }
 
