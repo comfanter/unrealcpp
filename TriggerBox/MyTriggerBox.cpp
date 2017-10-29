@@ -5,25 +5,23 @@
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
+
 #include "MyTriggerBox.h"
 
-void AMyTriggerBox::BeginPlay()
+AMyTriggerBox::AMyTriggerBox()
 {
-    Super::BeginPlay();
-
     //Register Events
-    OnActorBeginOverlap.AddDynamic(this, &AMyTriggerBox::OnTriggerEnter);
-    OnActorEndOverlap.AddDynamic(this, &AMyTriggerBox::OnTriggerExit);
-
+    OnActorBeginOverlap.AddDynamic(this, &AMyTriggerBox::OnOverlapBegin);
+    OnActorEndOverlap.AddDynamic(this, &AMyTriggerBox::OnOverlapEnd);
 }
 
-void AMyTriggerBox::OnTriggerEnter(AActor* Box, AActor* OverlappingActor)
+void AMyTriggerBox::OnOverlapBegin(AActor* Box, AActor* OverlappingActor)
 {
     // print to screen using above defined method when actor enters trigger box
     printFString("Overlapped Actor = %s", *OverlappingActor->GetName());    
 }
 
-void AMyTriggerBox::OnTriggerExit(AActor* Box, AActor* OverlappingActor)
+void AMyTriggerBox::OnOverlapEnd(AActor* Box, AActor* OverlappingActor)
 {
     // print to screen using above defined method when actor leaves trigger box
     print("Overlap Ended");

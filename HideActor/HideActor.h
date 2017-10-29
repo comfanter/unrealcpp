@@ -13,10 +13,6 @@ UCLASS()
 class UNREALCPP_API AHideActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AHideActor();
 
 protected:
 	// Called when the game starts or when spawned

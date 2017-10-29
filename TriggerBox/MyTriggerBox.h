@@ -16,13 +16,15 @@ class UNREALCPP_API AMyTriggerBox : public ATriggerBox
 	
 public:
 
-	// overide BeginPlay()
-	virtual void BeginPlay() override;
+	// constructor sets default values for this actor's properties
+	AMyTriggerBox();
 
+	// overlap begin function
 	UFUNCTION()
-	void OnTriggerEnter(AActor* Box, AActor* OverlappingActor);
+	void OnOverlapBegin(AActor* Box, AActor* OverlappingActor);
 
+	// overlap end function
 	UFUNCTION()
-	void OnTriggerExit(AActor* Box, AActor* OverlappingActor);
+	void OnOverlapEnd(AActor* Box, AActor* OverlappingActor);
 	
 };
