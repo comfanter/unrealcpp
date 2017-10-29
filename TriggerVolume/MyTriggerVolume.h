@@ -6,18 +6,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/TriggerBox.h"
-#include "MyTriggerBox.generated.h"
+#include "Engine/TriggerVolume.h"
+#include "MyTriggerVolume.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class UNREALCPP_API AMyTriggerBox : public ATriggerBox
+class UNREALCPP_API AMyTriggerVolume : public ATriggerVolume
 {
 	GENERATED_BODY()
 	
 public:
 
 	// constructor sets default values for this actor's properties
-	AMyTriggerBox();
+	AMyTriggerVolume();
 
 	// overlap begin function
 	UFUNCTION()

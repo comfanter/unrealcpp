@@ -1,23 +1,23 @@
 // Harrison McGuire
-// UE4 Version 4.18
+//UE4 Version 4.18
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/TriggerBox.h"
-#include "MyTriggerBox.generated.h"
+#include "Engine/TriggerVolume.h"
+#include "TriggerVolumeSpecificActor.generated.h"
 
 UCLASS()
-class UNREALCPP_API AMyTriggerBox : public ATriggerBox
+class UNREALCPP_API ATriggerVolumeSpecificActor : public ATriggerVolume
 {
 	GENERATED_BODY()
-	
-public:
 
+public:
+	
 	// constructor sets default values for this actor's properties
-	AMyTriggerBox();
+	ATriggerVolumeSpecificActor();
 
 	// overlap begin function
 	UFUNCTION()
@@ -26,5 +26,9 @@ public:
 	// overlap end function
 	UFUNCTION()
 	void OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor);
-	
+
+	// specific actor for overlap
+	UPROPERTY(EditAnywhere)
+	class AActor* SpecificActor;
+
 };

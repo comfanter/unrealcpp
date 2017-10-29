@@ -1,21 +1,21 @@
-// Harrison McGuire 
+// Harrison McGuire
 // UE4 Version 4.18
-// https://github.com/Harrison1/unrealcpp 
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
-#include "TriggerBoxSpecificActor.h"
+#include "TriggerVolumeSpecificActor.h"
 
-ATriggerBoxSpecificActor::ATriggerBoxSpecificActor()
+ATriggerVolumeSpecificActor::ATriggerVolumeSpecificActor()
 {
     //Register Events
-    OnActorBeginOverlap.AddDynamic(this, &ATriggerBoxSpecificActor::OnOverlapBegin);
-    OnActorEndOverlap.AddDynamic(this, &ATriggerBoxSpecificActor::OnOverlapEnd);
+    OnActorBeginOverlap.AddDynamic(this, &ATriggerVolumeSpecificActor::OnOverlapBegin);
+    OnActorEndOverlap.AddDynamic(this, &ATriggerVolumeSpecificActor::OnOverlapEnd);
 }
 
-void ATriggerBoxSpecificActor::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
+void ATriggerVolumeSpecificActor::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
     //if the overlapping actor is the specific actor we identified in the editor
     if (OtherActor && (OtherActor != this) && OtherActor == SpecificActor )
@@ -25,7 +25,7 @@ void ATriggerBoxSpecificActor::OnOverlapBegin(class AActor* OverlappedActor, cla
     }
 }
 
-void ATriggerBoxSpecificActor::OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor)
+void ATriggerVolumeSpecificActor::OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor)
 {
     //if the overlapping actor is the specific actor we identified in the editor
     if (OtherActor && (OtherActor != this) && OtherActor == SpecificActor )
@@ -34,3 +34,5 @@ void ATriggerBoxSpecificActor::OnOverlapEnd(class AActor* OverlappedActor, class
         printFString("%s has left the Trigger Box", *OtherActor->GetName());
     }
 }
+
+

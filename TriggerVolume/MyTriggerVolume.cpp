@@ -6,26 +6,25 @@
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
-#include "MyTriggerBox.h"
+#include "MyTriggerVolume.h"
 
-AMyTriggerBox::AMyTriggerBox()
+AMyTriggerVolume::AMyTriggerVolume()
 {
     //Register Events
-    OnActorBeginOverlap.AddDynamic(this, &AMyTriggerBox::OnOverlapBegin);
-    OnActorEndOverlap.AddDynamic(this, &AMyTriggerBox::OnOverlapEnd);
+    OnActorBeginOverlap.AddDynamic(this, &AMyTriggerVolume::OnOverlapBegin);
+    OnActorEndOverlap.AddDynamic(this, &AMyTriggerVolume::OnOverlapEnd);
 }
 
-void AMyTriggerBox::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
+void AMyTriggerVolume::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
-    // check if Actors do not equal nullptr and that 
     if (OtherActor && (OtherActor != this)) {
         // print to screen using above defined method when actor enters trigger box
         print("Overlap Begin");
-        printFString("Overlapped Actor = %s", *OverlappedActor->GetName());
+        printFString("Other Actor = %s", *OtherActor->GetName());
     }
 }
 
-void AMyTriggerBox::OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor)
+void AMyTriggerVolume::OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor)
 {
     if (OtherActor && (OtherActor != this)) {
         // print to screen using above defined method when actor leaves trigger box

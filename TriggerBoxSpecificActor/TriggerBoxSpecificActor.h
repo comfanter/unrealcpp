@@ -1,6 +1,6 @@
-// Harrison McGuire 
+// Harrison McGuire
 // UE4 Version 4.18
-// https://github.com/Harrison1/unrealcpp 
+// https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
 #pragma once
@@ -22,14 +22,14 @@ public:
 
 	// overlap begin function
 	UFUNCTION()
-	void OnOverlapBegin(class AActor* Box, class AActor* OverlappingActor);
+	void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
 
 	// overlap end function
 	UFUNCTION()
-	void OnOverlapEnd(class AActor* Box, class AActor* OverlappingActor);
+	void OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor);
 
 	// specific actor for overlap
 	UPROPERTY(EditAnywhere)
-	AActor* SpecificActor;
+	class AActor* SpecificActor;
 	
 };
