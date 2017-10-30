@@ -1,4 +1,7 @@
-// Harrison McGuire UE4 Version 4.18 https://github.com/Harrison1/unrealcpp https://severallevels.io/
+// Harrison McGuire
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
+// https://severallevels.io/
 
 #include "LightSwitchPushButton.h"
 #include "Components/PointLightComponent.h"
@@ -31,7 +34,6 @@ ALightSwitchPushButton::ALightSwitchPushButton()
 void ALightSwitchPushButton::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

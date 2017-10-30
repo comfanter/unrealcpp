@@ -1,4 +1,7 @@
-// Harrison McGuire UE4 Version 4.18 https://github.com/Harrison1/unrealcpp https://severallevels.io/
+// Harrison McGuire
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
+// https://severallevels.io/
 
 #pragma once
 
@@ -34,7 +37,7 @@ public:
 	// declare light intensity variable
 	UPROPERTY(VisibleAnywhere, Category = "Light Switch")
 	float LightIntensity;
-	
+
 	// // declare overlap begin function
 	// UFUNCTION()
 	// void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
