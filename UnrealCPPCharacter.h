@@ -73,6 +73,10 @@ public:
 
 	class ALightSwitchPushButton* CurrentLightSwitch;
 
+	// declare sphere comp
+	// UPROPERTY(VisibleAnywhere, Category = "Coll")
+	// class USphereComponent* LightSphere;
+
 protected:
 	
 	/** Fires a projectile. */

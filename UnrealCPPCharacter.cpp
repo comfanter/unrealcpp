@@ -1,10 +1,12 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 #include "UnrealCPPCharacter.h"
 #include "UnrealCPPProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
@@ -57,6 +59,11 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
+
+	// LightSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Light Sphere Component"));
+	// LightSphere->InitSphereRadius(250.0f);
+	// LightSphere->SetCollisionProfileName(TEXT("Trigger"));
+	// LightSphere->SetupAttachment(RootComponent);
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapBegin); 
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapEnd); 
@@ -185,6 +192,7 @@ void AUnrealCPPCharacter::OnAction()
 void AUnrealCPPCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && (OtherActor != this) && OtherComp) {
+		printFString("%s has entered", *OverlappedComp->GetName());
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Begin Overlapping"));
 	}
 } 
@@ -192,6 +200,7 @@ void AUnrealCPPCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedCo
 void AUnrealCPPCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor && (OtherActor != this) && OtherComp) {
+		printFString("%s has left", *OverlappedComp->GetName());
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("End Overlapping"));
 	}
 } 
