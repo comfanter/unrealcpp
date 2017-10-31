@@ -30,6 +30,10 @@ class AUnrealCPPCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
 
+	// create trigger capsule
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
+
 public:
 	AUnrealCPPCharacter();
 
@@ -69,13 +73,9 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	bool isLightSwitch(class ALightSwitchPushButton* Other);
+	bool isLightSwitch(class AActor* OtherActor);
 
 	class ALightSwitchPushButton* CurrentLightSwitch;
-
-	// declare sphere comp
-	// UPROPERTY(VisibleAnywhere, Category = "Coll")
-	// class USphereComponent* LightSphere;
 
 protected:
 	

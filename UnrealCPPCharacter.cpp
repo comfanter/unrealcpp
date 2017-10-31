@@ -60,13 +60,13 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
-	// LightSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Light Sphere Component"));
-	// LightSphere->InitSphereRadius(250.0f);
-	// LightSphere->SetCollisionProfileName(TEXT("Trigger"));
-	// LightSphere->SetupAttachment(RootComponent);
+	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(55.f, 96.0f);;
+	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerCapsule->SetupAttachment(RootComponent);
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapBegin); 
-	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapEnd); 
+	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapBegin); 
+	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapEnd); 
 
 	CurrentLightSwitch = NULL;
 }
@@ -186,14 +186,23 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 void AUnrealCPPCharacter::OnAction() 
 {
 	// seperate tutorial
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
+	if(CurrentLightSwitch) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
+
+		CurrentLightSwitch->ToggleLight();
+	}
+	
 }
 
 void AUnrealCPPCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && (OtherActor != this) && OtherComp) {
+	if (OtherActor && (OtherActor != this) && OtherComp && isLightSwitch(OtherActor)) {
 		printFString("%s has entered", *OverlappedComp->GetName());
+		printFString("%s is overlapping", *OtherActor->GetName());
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Begin Overlapping"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Of LIGHT BUTTON CLASS"));
+
+		CurrentLightSwitch = Cast<ALightSwitchPushButton>(OtherActor);
 	}
 } 
 
@@ -201,6 +210,18 @@ void AUnrealCPPCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp
 {
 	if (OtherActor && (OtherActor != this) && OtherComp) {
 		printFString("%s has left", *OverlappedComp->GetName());
+		printFString("%s is no longer overlapping", *OtherActor->GetName());
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("End Overlapping"));
+
+		CurrentLightSwitch = NULL;
 	}
-} 
+}
+
+bool AUnrealCPPCharacter::isLightSwitch(class AActor* OtherActor)
+{
+	if(OtherActor->GetClass()->IsChildOf(ALightSwitchPushButton::StaticClass())) {
+		return true;
+	} else {
+		return false;
+	}
+}

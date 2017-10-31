@@ -23,10 +23,8 @@ ALightSwitchPushButton::ALightSwitchPushButton()
 	LightSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Light Sphere Component"));
 	LightSphere->InitSphereRadius(250.0f);
 	LightSphere->SetCollisionProfileName(TEXT("Trigger"));
+	LightSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	LightSphere->SetupAttachment(RootComponent);
-
-	// LightSphere->OnComponentBeginOverlap.AddDynamic(this, &ALightSwitchPushButton::OnOverlapBegin);
-	// LightSphere->OnComponentEndOverlap.AddDynamic(this, &ALightSwitchPushButton::OnOverlapEnd); 
 
 }
 
@@ -42,22 +40,6 @@ void ALightSwitchPushButton::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-// void ALightSwitchPushButton::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-// {
-//     if (OtherActor && (OtherActor != this) && OtherComp)
-//     {
-//         ToggleLight();
-//     }
-// }
-
-// void ALightSwitchPushButton::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-// {
-//     if (OtherActor && (OtherActor != this) && OtherComp)
-//     {
-//         ToggleLight();
-//     }
-// }
 
 void ALightSwitchPushButton::ToggleLight()
 {
