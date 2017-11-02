@@ -100,6 +100,7 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	// Bind action event
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AUnrealCPPCharacter::OnAction);
+	PlayerInputComponent->BindAction("Action", IE_Released, this, &AUnrealCPPCharacter::OnAction);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnrealCPPCharacter::MoveForward);
@@ -186,34 +187,38 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 void AUnrealCPPCharacter::OnAction() 
 {
 	// seperate tutorial
-	if(CurrentLightSwitch) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
+	// if(CurrentLightSwitch) {
+		
+	// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
 
-		CurrentLightSwitch->ToggleLight();
-	}
+	// 	CurrentLightSwitch->ToggleLight();
+	// }
+
+	isAction = !isAction;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("I'm Pressing Action and isAction = %s"), (isAction ? TEXT("True") : TEXT("False"))));
 	
 }
 
 void AUnrealCPPCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && (OtherActor != this) && OtherComp && isLightSwitch(OtherActor)) {
-		printFString("%s has entered", *OverlappedComp->GetName());
-		printFString("%s is overlapping", *OtherActor->GetName());
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Begin Overlapping"));
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Of LIGHT BUTTON CLASS"));
+		// printFString("%s has entered", *OverlappedComp->GetName());
+		// printFString("%s is overlapping", *OtherActor->GetName());
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Begin Overlapping"));
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Of LIGHT BUTTON CLASS"));
 
-		CurrentLightSwitch = Cast<ALightSwitchPushButton>(OtherActor);
+		// CurrentLightSwitch = Cast<ALightSwitchPushButton>(OtherActor);
 	}
 } 
 
 void AUnrealCPPCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor && (OtherActor != this) && OtherComp) {
-		printFString("%s has left", *OverlappedComp->GetName());
-		printFString("%s is no longer overlapping", *OtherActor->GetName());
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("End Overlapping"));
+		// printFString("%s has left", *OverlappedComp->GetName());
+		// printFString("%s is no longer overlapping", *OtherActor->GetName());
+		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("End Overlapping"));
 
-		CurrentLightSwitch = NULL;
+		// CurrentLightSwitch = NULL;
 	}
 }
 
@@ -225,3 +230,12 @@ bool AUnrealCPPCharacter::isLightSwitch(class AActor* OtherActor)
 		return false;
 	}
 }
+
+// bool AUnrealCPPCharacter::isLightSwitch(class ALightSwitchPushButton* OtherActor)
+// {
+// 	if(OtherActor != NULL) {
+// 		return true;
+// 	} else {
+// 		return false;
+// 	}
+// }

@@ -77,6 +77,8 @@ public:
 
 	class ALightSwitchPushButton* CurrentLightSwitch;
 
+	bool isAction;
+
 protected:
 	
 	/** Fires a projectile. */
