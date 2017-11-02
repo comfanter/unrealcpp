@@ -186,38 +186,34 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 void AUnrealCPPCharacter::OnAction() 
 {
 	// seperate tutorial
-	// if(CurrentLightSwitch) {
+	if(CurrentLightSwitch) {
 		
-	// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
 
-	// 	CurrentLightSwitch->ToggleLight();
-	// }
-
-	isAction = !isAction;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("I'm Pressing Action and isAction = %s"), (isAction ? TEXT("True") : TEXT("False"))));
-	
+		CurrentLightSwitch->ToggleLight();
+	}
 }
 
 void AUnrealCPPCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && (OtherActor != this) && OtherComp && isLightSwitch(OtherActor)) {
-		// printFString("%s has entered", *OverlappedComp->GetName());
-		// printFString("%s is overlapping", *OtherActor->GetName());
-		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Begin Overlapping"));
-		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Of LIGHT BUTTON CLASS"));
+		printFString("%s has entered", *OverlappedComp->GetName());
+		printFString("%s is overlapping", *OtherActor->GetName());
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Begin Overlapping"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Of LIGHT BUTTON CLASS"));
 
-		// CurrentLightSwitch = Cast<ALightSwitchPushButton>(OtherActor);
+		CurrentLightSwitch = Cast<ALightSwitchPushButton>(OtherActor);
 	}
 } 
 
 void AUnrealCPPCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor && (OtherActor != this) && OtherComp) {
-		// printFString("%s has left", *OverlappedComp->GetName());
-		// printFString("%s is no longer overlapping", *OtherActor->GetName());
-		// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("End Overlapping"));
+		printFString("%s has left", *OverlappedComp->GetName());
+		printFString("%s is no longer overlapping", *OtherActor->GetName());
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("End Overlapping"));
 
-		// CurrentLightSwitch = NULL;
+		CurrentLightSwitch = NULL;
 	}
 }
 

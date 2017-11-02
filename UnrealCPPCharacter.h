@@ -75,6 +75,9 @@ public:
 
 	bool isLightSwitch(class AActor* OtherActor);
 
+	//alt bool method
+	// bool isLightSwitch(class ALightSwitchPushButton* OtherActor);
+
 	class ALightSwitchPushButton* CurrentLightSwitch;
 
 	bool isAction;
