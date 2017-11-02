@@ -52,5 +52,7 @@ public:
 	void ToggleLight();
 
 	class AUnrealCPPCharacter* OurPlayer;
+
+	bool isOverlapping;
 	
 };
