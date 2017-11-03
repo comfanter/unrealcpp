@@ -73,9 +73,8 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	// declare current light switch
 	class ALightSwitchPushButton* CurrentLightSwitch;
-
-	bool isAction;
 
 protected:
 	
