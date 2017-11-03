@@ -1,4 +1,7 @@
-// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Harrison McGuire 
+// UE4 Version 4.18 
+// https://github.com/Harrison1/unrealcpp 
+// https://severallevels.io/
 
 #include "UnrealCPPCharacter.h"
 #include "UnrealCPPProjectile.h"
