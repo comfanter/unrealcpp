@@ -184,7 +184,6 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction() 
 {
-
 	if(CurrentLightSwitch) 
 	{
 		
