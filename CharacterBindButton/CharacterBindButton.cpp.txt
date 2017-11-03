@@ -56,18 +56,6 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
-	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
-	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
-
-	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(55.f, 96.0f);;
-	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
-	TriggerCapsule->SetupAttachment(RootComponent);
-
-	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapBegin); 
-	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &AUnrealCPPCharacter::OnOverlapEnd); 
-
-	CurrentLightSwitch = NULL;
 }
 
 void AUnrealCPPCharacter::BeginPlay()
@@ -186,22 +174,7 @@ void AUnrealCPPCharacter::OnAction()
 {
 	if(CurrentLightSwitch) {
 		
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
-
-		CurrentLightSwitch->ToggleLight();
-	}
-}
-
-void AUnrealCPPCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherActor && (OtherActor != this) && OtherComp && OtherActor->GetClass()->IsChildOf(ALightSwitchPushButton::StaticClass())) {
-		CurrentLightSwitch = Cast<ALightSwitchPushButton>(OtherActor);
-	}
-} 
-
-void AUnrealCPPCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherActor && (OtherActor != this) && OtherComp) {
-		CurrentLightSwitch = NULL;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("I'm Pressing Action"));
+        
 	}
 }
