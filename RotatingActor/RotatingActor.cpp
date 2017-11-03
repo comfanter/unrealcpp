@@ -3,10 +3,10 @@
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io/
 
-#include "SpinningActor.h"
+#include "RotatingActor.h"
 
 // Sets default values
-ASpinningActor::ASpinningActor()
+ARotatingActor::ARotatingActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,21 +18,21 @@ ASpinningActor::ASpinningActor()
 }
 
 // Called when the game starts or when spawned
-void ASpinningActor::BeginPlay()
+void ARotatingActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASpinningActor::Tick(float DeltaTime)
+void ARotatingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	// on every frame change rotationg for a smooth rotating actor
 	FRotator NewRotation = FRotator(PitchValue, YawValue, RollValue);
 	
-	FQuat QuatRotation = FQuat( NewRotation);
+	FQuat QuatRotation = FQuat(NewRotation);
 	
 	AddActorLocalRotation(QuatRotation, false, 0, ETeleportType::None);
 

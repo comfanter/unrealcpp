@@ -1,22 +1,19 @@
-// Harrison McGuire
-// UE4 Version 4.18
-// https://github.com/Harrison1/unrealcpp
-// https://severallevels.io/
+// Harrison McGuire UE4 Version 4.18 https://github.com/Harrison1/unrealcpp https://severallevels.io/
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SpinningActor.generated.h"
+#include "RotatingOffsetActor.generated.h"
 
 UCLASS()
-class UNREALCPP_API ASpinningActor : public AActor
+class UNREALCPP_API ARotatingOffsetActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASpinningActor();
+	ARotatingOffsetActor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,5 +32,14 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float RollValue;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float XValue;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float YValue;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float ZValue;
 	
 };
