@@ -33,12 +33,6 @@ void ALightSwitchPushButton::BeginPlay()
 	Super::BeginPlay();
 }
 
-// // Called every frame
-// void ALightSwitchPushButton::Tick(float DeltaTime)
-// {
-// 	Super::Tick(DeltaTime);
-// }
-
 void ALightSwitchPushButton::ToggleLight()
 {
     PointLight->ToggleVisibility();
