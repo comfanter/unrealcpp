@@ -26,7 +26,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// declare our float variables 	
+	// declare our float variables
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float AngleAxis;
+
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float XValue;
 
@@ -35,5 +38,16 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float ZValue;
-	
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float FXValue;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float FYValue;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float FZValue;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float PlusBy;
 };

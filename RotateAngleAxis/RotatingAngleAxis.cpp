@@ -24,8 +24,41 @@ void ARotatingAngleAxis::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector NewActorLocation = GetActorLocation().RotateAngleAxis(1.0f, FVector (XValue,YValue,ZValue));
+	FVector NewLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+
+	// FVector MyLocation = FVector (0,0,800);
+
+	FVector SNew = FVector(XValue,YValue,ZValue);
+
+	// NewLocation.X += XValue;
+	// NewLocation.Y += YValue;
+	// NewLocation.Z += ZValue;
+
+	AngleAxis += PlusBy;
+
+	if(AngleAxis > 360.0f) {
+
+		AngleAxis = 1;
+	}
+
+	// AngleAxis = FMath::ClampAngle(AngleAxis,0.0f,360.0f);
+
+	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	int32 mynumpawns = GetWorld()->GetNumPawns();
+	// myCharacter->GetActorLocation();
+
+	FVector RotateValue = SNew.RotateAngleAxis(AngleAxis, FVector (FXValue,FYValue,FZValue));
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("RotateValue: %s"), *RotateValue.ToString()));	
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("AngleAxis: %f"), AngleAxis));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Player Location: %s"), *myCharacter.ToString()));	
+
+	NewLocation.X += RotateValue.X;
+	NewLocation.Y += RotateValue.Y;
+	NewLocation.Z += RotateValue.Z;
 	
-	SetActorLocation(NewActorLocation);
+	SetActorLocation(NewLocation);
+
+	// SetActorRelativeLocation(NewActorLocation, false, 0, ETeleportType::None);
 	
 }
