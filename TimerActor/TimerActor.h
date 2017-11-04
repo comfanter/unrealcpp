@@ -7,16 +7,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "FloatingActor.generated.h"
+#include "TimerActor.generated.h"
 
 UCLASS()
-class UNREALCPP_API AFloatingActor : public AActor
+class UNREALCPP_API ATimerActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AFloatingActor();
+	ATimerActor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,17 +26,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// declare our float variables 
-	float RunningTime;
+	void RepeatingFunction();
 	
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float XValue;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float YValue;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float ZValue;
-	
+	FTimerHandle MemberTimerHandle;
 	
 };

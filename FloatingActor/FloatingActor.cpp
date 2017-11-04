@@ -1,7 +1,7 @@
 // Harrison McGuire 
 // UE4 Version 4.18 
 // https://github.com/Harrison1/unrealcpp 
-// https://severallevels.io/
+// https://severallevels.io
 // originally derived from https://docs.unrealengine.com/latest/INT/Programming/QuickStart/index.html
 
 #include "FloatingActor.h"
