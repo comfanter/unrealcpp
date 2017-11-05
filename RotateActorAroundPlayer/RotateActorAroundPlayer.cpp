@@ -3,37 +3,37 @@
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
 
-#include "RotatingAngleAxis.h"
+#include "RotateActorAroundPlayer.h"
+
 
 // Sets default values
-ARotatingAngleAxis::ARotatingAngleAxis()
+ARotateActorAroundPlayer::ARotateActorAroundPlayer()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// init values
+	XValue = 300.f;
+	FZValue = 1.f;
+	PlusBy = 1.f;
 }
 
 // Called when the game starts or when spawned
-void ARotatingAngleAxis::BeginPlay()
+void ARotateActorAroundPlayer::BeginPlay()
 {
-	Super::BeginPlay();	
+	Super::BeginPlay();
+	
 }
 
 // Called every frame
-void ARotatingAngleAxis::Tick(float DeltaTime)
+void ARotateActorAroundPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	FVector NewLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-
-	// FVector MyLocation = FVector (0,0,800);
-
-	FVector SNew = FVector(XValue,YValue,ZValue);
-
-	// NewLocation.X += XValue;
-	// NewLocation.Y += YValue;
-	// NewLocation.Z += ZValue;
-
+		
+	FVector Dimensions = FVector(XValue,YValue,ZValue);
+	
 	AngleAxis += PlusBy;
 
 	if(AngleAxis > 360.0f) {
@@ -43,17 +43,13 @@ void ARotatingAngleAxis::Tick(float DeltaTime)
 
 	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 
-	FVector RotateValue = SNew.RotateAngleAxis(AngleAxis, FVector (FXValue,FYValue,FZValue));
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("RotateValue: %s"), *RotateValue.ToString()));	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("AngleAxis: %f"), AngleAxis));
+	FVector RotateValue = Dimensions.RotateAngleAxis(AngleAxis, FVector (FXValue,FYValue,FZValue));
 
 	NewLocation.X += RotateValue.X;
 	NewLocation.Y += RotateValue.Y;
 	NewLocation.Z += RotateValue.Z;
-	
-	// SetActorLocation(NewLocation);
 
 	SetActorLocation(NewLocation, false, 0, ETeleportType::None);
-	
+
 }
+
