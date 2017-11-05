@@ -41,8 +41,6 @@ void ARotatingAngleAxis::Tick(float DeltaTime)
 		AngleAxis = 1;
 	}
 
-	// AngleAxis = FMath::ClampAngle(AngleAxis,0.0f,360.0f);
-
 	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	int32 mynumpawns = GetWorld()->GetNumPawns();
 	// myCharacter->GetActorLocation();
