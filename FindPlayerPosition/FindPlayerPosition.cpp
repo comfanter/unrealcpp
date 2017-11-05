@@ -24,10 +24,10 @@ void AFindPlayerPosition::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// get first player pawn location
-	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	FVector MyCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 
 	// screen log player location
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Player Location: %s"), *myCharacter.ToString()));	
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Player Location: %s"), *MyCharacter.ToString()));	
 
 }
 
