@@ -1,10 +1,13 @@
-// Harrison McGuire UE4 Version 4.18 https://github.com/Harrison1/unrealcpp https://severallevels.io
+// Harrison McGuire
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
+// https://severallevels.io
 
-#include "RotateActorAroundWithUpVector.h"
+#include "RotateActorAroundWithRotation.h"
 
 
 // Sets default values
-ARotateActorAroundWithUpVector::ARotateActorAroundWithUpVector()
+ARotateActorAroundWithRotation::ARotateActorAroundWithRotation()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,14 +15,14 @@ ARotateActorAroundWithUpVector::ARotateActorAroundWithUpVector()
 }
 
 // Called when the game starts or when spawned
-void ARotateActorAroundWithUpVector::BeginPlay()
+void ARotateActorAroundWithRotation::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ARotateActorAroundWithUpVector::Tick(float DeltaTime)
+void ARotateActorAroundWithRotation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
