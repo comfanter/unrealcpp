@@ -49,9 +49,6 @@ void ARotateActorAroundWithRotation::Tick(float DeltaTime)
 	FRotator NewRotation = FRotator(0, AngleAxis, 0);
 	
 	FQuat QuatRotation = FQuat(NewRotation);
-	
-	// AddActorLocalRotation(QuatRotation, false, 0, ETeleportType::None);
-
 
 	SetActorLocationAndRotation(NewLocation, QuatRotation, false, 0, ETeleportType::None);
 
