@@ -25,18 +25,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(EditAnywhere, Category = "Sweeping")
-	float SphereHeight = 200;
-
-	UPROPERTY(EditAnywhere, Category = "Sweeping")
-	float SphereRadius = 500;
-
-	UPROPERTY(EditAnywhere, Category = "Sweeping")
-	int32 Segments = 100;
-
-	UPROPERTY(EditAnywhere, Category = "Sweeping")
-	FVector DLocation;
-
 	
 };
