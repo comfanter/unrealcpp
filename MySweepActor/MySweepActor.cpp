@@ -49,25 +49,6 @@ void AMySweepActor::BeginPlay()
 			}						
 		}
 	}
-
-
-
-	// DrawDebugPoint(
-	// 	GetWorld(), 
-	// 	DLocation,
-	// 	400,  					//size
-	// 	FColor(155,0,155),  
-	// 	true  				//persistent (never goes away)
-	// );
-
-	// DrawDebugSphere(
-	// 	GetWorld(),
-	// 	DLocation, 
-	// 	500, 
-	// 	32, 
-	// 	FColor(255,0,255),
-	// 	true
-	// );
 	
 }
 
