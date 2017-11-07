@@ -37,6 +37,18 @@ public:
 	FVector LocationThree;
 
 	UPROPERTY(EditAnywhere, Category = "Locations")
+	FVector LocationFour;
+
+	UPROPERTY(EditAnywhere, Category = "Locations")
+	FVector LocationFive;
+
+	UPROPERTY(EditAnywhere, Category = "Locations")
 	FMatrix CircleMatrix;
+
+	UPROPERTY(EditAnywhere, Category = "Locations")
+	FBox MyBox;
+
+	UPROPERTY(EditAnywhere, Category = "Locations")
+	FTransform MyTransform;
 	
 };
