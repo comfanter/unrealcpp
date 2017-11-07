@@ -35,5 +35,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Locations")
 	FVector LocationThree;
+
+	UPROPERTY(EditAnywhere, Category = "Locations")
+	FMatrix CircleMatrix;
 	
 };

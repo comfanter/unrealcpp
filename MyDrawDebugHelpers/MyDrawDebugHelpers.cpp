@@ -17,7 +17,6 @@ AMyDrawDebugHelpers::AMyDrawDebugHelpers()
 	LocationOne = FVector(0,0,600);
 	LocationTwo = FVector(0,-600,600);
 	LocationThree = FVector(0,600,600);
-
 }
 
 // Called when the game starts or when spawned
@@ -29,8 +28,7 @@ void AMyDrawDebugHelpers::BeginPlay()
 
 	DrawDebugSphere(GetWorld(), LocationTwo, 200, 26, FColor(181,0,0), true);
 
-	DrawDebugSphere(GetWorld(), LocationThree, 200, 26, FColor(0,104,167), true);
-	
+	DrawDebugCircle(GetWorld(), CircleMatrix, 200, 50, FColor(0,104,167), true);
 }
 
 // Called every frame
