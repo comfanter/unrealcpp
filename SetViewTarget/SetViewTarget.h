@@ -2,22 +2,21 @@
 // UE4 Version 4.18
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
-// UE4 C++ Tutorial https://docs.unrealengine.com/latest/INT/Programming/Tutorials/AutoCamera/index.html
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CameraDirector.generated.h"
+#include "SetViewTarget.generated.h"
 
 UCLASS()
-class UNREALCPP_API ACameraDirector : public AActor
+class UNREALCPP_API ASetViewTarget : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACameraDirector();
+	ASetViewTarget();
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,11 +28,6 @@ public:
 
 	// declare variables
 	UPROPERTY(EditAnywhere)
-	AActor* CameraOne;
-
-	UPROPERTY(EditAnywhere)
-	AActor* CameraTwo;
-
-	float TimeToNextCameraChange;
+	AActor* MyActor;
 	
 };
