@@ -14,7 +14,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
-// include draw debu helpers header file
+// include draw debug helpers header file
 #include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -82,6 +82,28 @@ void AUnrealCPPCharacter::BeginPlay()
 void AUnrealCPPCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FHitResult OutHit;
+	FVector Start = FP_Gun->GetComponentLocation();
+
+	// alternatively you can get the camera location
+	// FVector Start = FirstPersonCameraComponent->GetComponentLocation();
+
+	FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
+	FVector End = ((ForwardVector * 1000.f) + Start);
+	FCollisionQueryParams CollisionParams;
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
+
+	if(GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams)) 
+	{
+		if(OutHit.bBlockingHit)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hitting: %s"), *OutHit.GetActor()->GetName()));
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point: %s"), *OutHit.ImpactPoint.ToString()));
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Normal Point: %s"), *OutHit.ImpactNormal.ToString()));
+		}
+	}
 
 }
 

@@ -68,7 +68,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
-
 protected:
 	
 	/** Fires a projectile. */
