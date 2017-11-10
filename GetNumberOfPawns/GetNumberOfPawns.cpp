@@ -31,4 +31,3 @@ void AGetNumberOfPawns::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
