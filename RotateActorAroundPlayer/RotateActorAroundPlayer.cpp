@@ -12,10 +12,9 @@ ARotateActorAroundPlayer::ARotateActorAroundPlayer()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// init values
-	XValue = 300.f;
-	FZValue = 1.f;
-	PlusBy = 1.f;
+	Dimensions = FVector (300, 0, 0);
+	AxisVector = FVector (0, 0, 1);
+	Multiplier = 50.f;
 }
 
 // Called when the game starts or when spawned
@@ -31,19 +30,17 @@ void ARotateActorAroundPlayer::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector NewLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-		
-	FVector Dimensions = FVector(XValue,YValue,ZValue);
-	
-	AngleAxis += PlusBy;
+			
+	AngleAxis += DeltaTime * Multiplier;
 
-	if(AngleAxis > 360.0f) {
-
-		AngleAxis = 1;
+	if(AngleAxis >= 360.0f) 
+	{
+		AngleAxis = 0;
 	}
 
 	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 
-	FVector RotateValue = Dimensions.RotateAngleAxis(AngleAxis, FVector (FXValue,FYValue,FZValue));
+	FVector RotateValue = Dimensions.RotateAngleAxis(AngleAxis, AxisVector);
 
 	NewLocation.X += RotateValue.X;
 	NewLocation.Y += RotateValue.Y;

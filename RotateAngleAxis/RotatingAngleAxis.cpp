@@ -11,12 +11,17 @@ ARotatingAngleAxis::ARotatingAngleAxis()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Dimensions = FVector (300, 0, 0);
+	AxisVector = FVector (0, 0, 1);
+	Multiplier = 50.f;
+
 }
 
 // Called when the game starts or when spawned
 void ARotatingAngleAxis::BeginPlay()
 {
 	Super::BeginPlay();	
+	
 }
 
 // Called every frame
@@ -24,26 +29,19 @@ void ARotatingAngleAxis::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector NewLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	FVector NewLocation = FVector (0,0,800);
 
-	// FVector MyLocation = FVector (0,0,800);
+	AngleAxis += DeltaTime * Multiplier;
 
-	FVector SNew = FVector(XValue,YValue,ZValue);
-
-	// NewLocation.X += XValue;
-	// NewLocation.Y += YValue;
-	// NewLocation.Z += ZValue;
-
-	AngleAxis += PlusBy;
-
-	if(AngleAxis > 360.0f) {
-
-		AngleAxis = 1;
+	if(AngleAxis >= 360.0f) 
+	{
+		AngleAxis = 0;
 	}
+
 
 	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 
-	FVector RotateValue = SNew.RotateAngleAxis(AngleAxis, FVector (FXValue,FYValue,FZValue));
+	FVector RotateValue = Dimensions.RotateAngleAxis(AngleAxis, AxisVector);
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("RotateValue: %s"), *RotateValue.ToString()));	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("AngleAxis: %f"), AngleAxis));
@@ -51,8 +49,6 @@ void ARotatingAngleAxis::Tick(float DeltaTime)
 	NewLocation.X += RotateValue.X;
 	NewLocation.Y += RotateValue.Y;
 	NewLocation.Z += RotateValue.Z;
-	
-	// SetActorLocation(NewLocation);
 
 	SetActorLocation(NewLocation, false, 0, ETeleportType::None);
 	

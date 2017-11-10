@@ -31,24 +31,12 @@ public:
 	float AngleAxis;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float XValue;
+	FVector Dimensions;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float YValue;
+	FVector AxisVector;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float ZValue;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float FXValue;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float FYValue;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float FZValue;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-	float PlusBy;
+	float Multiplier;
 	
 };
