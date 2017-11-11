@@ -1,4 +1,8 @@
-// Harrison McGuire UE4 Version 4.18 https://github.com/Harrison1/unrealcpp https://severallevels.io
+// Harrison McGuire
+// UE4 Version 4.18
+// https://github.com/Harrison1/unrealcpp
+// https://severallevels.io
+// https://docs.unrealengine.com/latest/INT/Programming/Tutorials/Components/index.html
 
 #pragma once
 
