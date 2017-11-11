@@ -21,7 +21,7 @@ ALightSwitchPushButton::ALightSwitchPushButton()
 	RootComponent = PointLight;
 
 	LightSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Light Sphere Component"));
-	LightSphere->InitSphereRadius(250.0f);
+	LightSphere->InitSphereRadius(300.0f);
 	LightSphere->SetCollisionProfileName(TEXT("Trigger"));
 	LightSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	LightSphere->SetupAttachment(RootComponent);

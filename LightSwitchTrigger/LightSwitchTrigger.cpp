@@ -7,6 +7,8 @@
 #include "LightSwitchTrigger.h"
 #include "Components/PointLightComponent.h"
 #include "Components/SphereComponent.h"
+// include draw debu helpers header file
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ALightSwitchTrigger::ALightSwitchTrigger()
@@ -22,7 +24,8 @@ ALightSwitchTrigger::ALightSwitchTrigger()
 	RootComponent = PointLight;
 
 	LightSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Light Sphere Component"));
-	LightSphere->InitSphereRadius(250.0f);
+	LightSphere->InitSphereRadius(300.0f);
+	LightSphere->SetCollisionProfileName(TEXT("Trigger"));
 	LightSphere->SetupAttachment(RootComponent);
 
 	LightSphere->OnComponentBeginOverlap.AddDynamic(this, &ALightSwitchTrigger::OnOverlapBegin);
@@ -34,6 +37,8 @@ ALightSwitchTrigger::ALightSwitchTrigger()
 void ALightSwitchTrigger::BeginPlay()
 {
 	Super::BeginPlay();
+
+	DrawDebugSphere(GetWorld(), GetActorLocation(), 300.f, 50, FColor::Green, true, -1, 0, 2);
 	
 }
 
