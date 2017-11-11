@@ -16,6 +16,10 @@ UCLASS()
 class UNREALCPP_API AMyTriggerVolume : public ATriggerVolume
 {
 	GENERATED_BODY()
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 public:
 
