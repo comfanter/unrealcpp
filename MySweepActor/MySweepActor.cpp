@@ -25,13 +25,13 @@ void AMySweepActor::BeginPlay()
 	
 	// start and end locations
 	FVector SweepStart = GetActorLocation();
-	FVector SweepEnd = FVector(SweepStart.X += 100.0f, SweepStart.Y, SweepStart.Z);
+	FVector SweepEnd = GetActorLocation();
 
 	// create a collision sphere
 	FCollisionShape MyColSphere = FCollisionShape::MakeSphere(500.0f);
 
 	// draw collision sphere
-	DrawDebugSphere(GetWorld(), GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Green, true);
+	DrawDebugSphere(GetWorld(), GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Purple, true);
 	
 	// check if something got hit in the sweep
 	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, SweepStart, SweepEnd, FQuat::Identity, ECC_WorldStatic, MyColSphere);
@@ -45,7 +45,8 @@ void AMySweepActor::BeginPlay()
 			{
 				// screen log information on what was hit
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Hit Result: %s"), *Hit.Actor->GetName()));
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("All Hit Information: %s"), *Hit.ToString()));
+				// uncommnet to see more info on sweeped actor
+				// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("All Hit Information: %s"), *Hit.ToString()));
 			}						
 		}
 	}
