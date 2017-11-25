@@ -1,5 +1,5 @@
 // Harrison McGuire
-// UE4 Version 4.18
+// UE4 Version 4.18.1
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
 
@@ -26,7 +26,7 @@ AActorLineTrace::AActorLineTrace()
         Cube->SetWorldScale3D(FVector(1.f));
 	}
 	
-	// add another component to the actor to overlap with the line trace to get the event to fire
+	// add another component in the editor to the actor to overlap with the line trace to get the event to fire
 
 }
 
