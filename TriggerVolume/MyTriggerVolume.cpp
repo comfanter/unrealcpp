@@ -7,7 +7,7 @@
 // #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 #include "MyTriggerVolume.h"
-// include draw debu helpers header file
+// include draw debug helpers header file
 #include "DrawDebugHelpers.h"
 
 AMyTriggerVolume::AMyTriggerVolume()
@@ -22,7 +22,7 @@ void AMyTriggerVolume::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DrawDebugBox(GetWorld(), GetActorLocation(), GetActorScale()*100, FColor::Purple, true, -1, 0, 5);
+	DrawDebugBox(GetWorld(), GetActorLocation(), GetActorScale()*100, FColor::Cyan, true, -1, 0, 5);
 	
 }
 

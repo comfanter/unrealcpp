@@ -14,6 +14,11 @@ UCLASS()
 class UNREALCPP_API ATriggerBoxSpecificActor : public ATriggerBox
 {
 	GENERATED_BODY()
+
+protected:
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 public:
 
