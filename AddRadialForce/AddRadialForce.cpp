@@ -48,6 +48,8 @@ void AAddRadialForce::BeginPlay()
 
 			if (MeshComp)
 			{
+				// alternivly you can use  ERadialImpulseFalloff::RIF_Linear for the impulse to get linearly weaker as it gets further from origin.
+				// set the float radius to 500 and the float strength to 2000.
 				MeshComp->AddRadialImpulse(GetActorLocation(), 500.f, 2000.f, ERadialImpulseFalloff::RIF_Constant, true);
 			}
 		}
