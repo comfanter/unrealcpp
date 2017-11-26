@@ -60,4 +60,3 @@ void AActorLineTrace::Tick(float DeltaTime)
 	}
 
 }
-

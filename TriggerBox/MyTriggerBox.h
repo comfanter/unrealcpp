@@ -13,7 +13,12 @@ UCLASS()
 class UNREALCPP_API AMyTriggerBox : public ATriggerBox
 {
 	GENERATED_BODY()
-	
+
+protected:
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 public:
 
 	// constructor sets default values for this actor's properties

@@ -4,15 +4,26 @@
 // https://severallevels.io
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
-// #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 #include "MyTriggerBox.h"
+// include draw debu helpers header file
+#include "DrawDebugHelpers.h"
 
 AMyTriggerBox::AMyTriggerBox()
 {
     //Register Events
     OnActorBeginOverlap.AddDynamic(this, &AMyTriggerBox::OnOverlapBegin);
     OnActorEndOverlap.AddDynamic(this, &AMyTriggerBox::OnOverlapEnd);
+}
+
+// Called when the game starts or when spawned
+void AMyTriggerBox::BeginPlay()
+{
+	Super::BeginPlay();
+
+    DrawDebugBox(GetWorld(), GetActorLocation(), GetComponentsBoundingBox().GetExtent(), FColor::Purple, true, -1, 0, 5);
+	
 }
 
 void AMyTriggerBox::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
