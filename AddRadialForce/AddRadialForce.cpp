@@ -23,15 +23,12 @@ void AAddRadialForce::BeginPlay()
 	// create tarray for hit results
 	TArray<FHitResult> OutHits;
 
-	// crate tarray for sweep actors
-	TArray<AActor*> SweepActors;
-
 	// get actor locations
 	FVector MyLocation = GetActorLocation();
 	
 	// start and end locations. The sphere will create the radial sweep.
-	FVector SweepStart = MyLocation;
-	FVector SweepEnd = MyLocation;
+	FVector Start = MyLocation;
+	FVector End = MyLocation;
 
 	// create a collision sphere
 	FCollisionShape MyColSphere = FCollisionShape::MakeSphere(500.0f);
@@ -40,31 +37,20 @@ void AAddRadialForce::BeginPlay()
 	DrawDebugSphere(GetWorld(), GetActorLocation(), MyColSphere.GetSphereRadius(), 50, FColor::Cyan, true);
 	
 	// check if something got hit in the sweep
-	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, SweepStart, SweepEnd, FQuat::Identity, ECC_WorldStatic, MyColSphere);
+	bool isHit = GetWorld()->SweepMultiByChannel(OutHits, Start, End, FQuat::Identity, ECC_WorldStatic, MyColSphere);
 
 	if (isHit)
 	{
 		// loop through TArray
 		for (auto& Hit : OutHits)
 		{
-			SweepActors.Add(Hit.GetActor());				
-		}
-	}
+			UStaticMeshComponent* MeshComp = Cast<UStaticMeshComponent>((Hit.GetActor())->GetRootComponent());
 
-	// loop through sweep actors
-	for (auto& SweepActor : SweepActors)
-	{
-		// you need the prmitive comp to apply radial force. Popular prim comps are CapsuleComponent, StaticMeshComponent, and SkeletalMeshComponent.
-		UStaticMeshComponent* MeshComp = Cast<UStaticMeshComponent>((SweepActor)->GetRootComponent());
-	
-		
-		if (MeshComp)
-		{
-			// alternivly you can use  ERadialImpulseFalloff::RIF_Linear for the impulse to get linearly weaker as it gets further from origin.
-			// set the float radius to 500 and the float strength to 2000.
-			MeshComp->AddRadialImpulse(GetActorLocation(), 500.f, 2000.f, ERadialImpulseFalloff::RIF_Constant, true);
+			if (MeshComp)
+			{
+				MeshComp->AddRadialImpulse(GetActorLocation(), 500.f, 2000.f, ERadialImpulseFalloff::RIF_Constant, true);
+			}
 		}
-
 	}
 	
 }
