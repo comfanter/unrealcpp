@@ -38,8 +38,6 @@ void ARotateActorAroundPlayer::Tick(float DeltaTime)
 		AngleAxis = 0;
 	}
 
-	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-
 	FVector RotateValue = Dimensions.RotateAngleAxis(AngleAxis, AxisVector);
 
 	NewLocation.X += RotateValue.X;
