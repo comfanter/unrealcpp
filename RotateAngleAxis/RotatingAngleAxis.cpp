@@ -38,9 +38,6 @@ void ARotatingAngleAxis::Tick(float DeltaTime)
 		AngleAxis = 0;
 	}
 
-
-	FVector myCharacter = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-
 	FVector RotateValue = Dimensions.RotateAngleAxis(AngleAxis, AxisVector);
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("RotateValue: %s"), *RotateValue.ToString()));	
