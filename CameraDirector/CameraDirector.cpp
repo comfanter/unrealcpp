@@ -1,5 +1,5 @@
 // Harrison McGuire
-// UE4 Version 4.18.2
+// UE4 Version 4.18.2.2
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
 // UE4 C++ Tutorial https://docs.unrealengine.com/latest/INT/Programming/Tutorials/AutoCamera/index.html
