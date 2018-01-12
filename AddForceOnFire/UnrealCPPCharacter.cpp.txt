@@ -3,6 +3,8 @@
 // https://github.com/Harrison1/unrealcpp 
 // https://severallevels.io
 // https://harrisonmcguire.com
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/AddForce/
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/GameFramework/AActor/IsRootComponentMovable/index.html
 
 #include "UnrealCPPCharacter.h"
 #include "UnrealCPPProjectile.h"
@@ -117,23 +119,45 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 void AUnrealCPPCharacter::OnFire()
 {
 
-	// try and fire a projectile
-	if (ProjectileClass != NULL)
+	//Hit contains information about what the line trace hit.
+	FHitResult Hit;
+	FVector CameraForward = FVector(FirstPersonCameraComponent->GetForwardVector());
+
+	//The length of the line trace in units.
+	//For more flexibility you can expose a public variable in the editor
+	float LineLength = 2000;
+
+	FRotator SpawnRotation = GetControlRotation();
+	FVector StartLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+    // log helpful information
+	UE_LOG(LogClass, Log, TEXT("Start Location: %s"), *StartLocation.ToString());
+	UE_LOG(LogClass, Log, TEXT("Spawn Rotation: %s"), *SpawnRotation.ToString());
+	UE_LOG(LogClass, Log, TEXT("Forward Vector: %s"), *FirstPersonCameraComponent->GetForwardVector().ToString());
+
+	//The EndLocation of the line trace
+	FVector EndLocation = StartLocation + (FirstPersonCameraComponent->GetForwardVector() * LineLength);
+
+	//Collision parameters. The following syntax means that we don't want the trace to be complex
+	FCollisionQueryParams CollisionParameters;
+
+	GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECollisionChannel::ECC_PhysicsBody, CollisionParameters);
+
+	//DrawDebugLine is used in order to see the line cast we performed
+	//The boolean parameter used here means that we want the lines to be persistent so we can see the actual linecast forever
+	//The last parameter is the width of the lines.
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, -1, 0, 1.f);
+
+	UStaticMeshComponent* MeshRootComp = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
+
+	if (Hit.GetActor() && Hit.GetActor()->IsRootComponentMovable()) 
 	{
-		UWorld* const World = GetWorld();
-		if (World != NULL)
-		{
-			const FRotator SpawnRotation = GetControlRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		UE_LOG(LogClass, Log, TEXT("I Hit: %s"), *Hit.GetActor()->GetName());
+		UE_LOG(LogClass, Log, TEXT("Mesh Mass: %f"), MeshRootComp->GetMass());
 
-			// spawn the projectile at the muzzle
-			World->SpawnActor<AUnrealCPPProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		}
+		MeshRootComp->AddForce(CameraForward*100000*MeshRootComp->GetMass());
+
 	}
 
 	// try and play the sound if specified
