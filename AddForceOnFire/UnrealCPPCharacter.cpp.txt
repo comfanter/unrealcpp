@@ -148,15 +148,17 @@ void AUnrealCPPCharacter::OnFire()
 	//The last parameter is the width of the lines.
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, -1, 0, 1.f);
 
-	UStaticMeshComponent* MeshRootComp = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
-
-	if (Hit.GetActor() && Hit.GetActor()->IsRootComponentMovable()) 
+	if (Hit.GetActor()) 
 	{
+		if(Hit.GetActor()->IsRootComponentMovable()) {
 
-		UE_LOG(LogClass, Log, TEXT("I Hit: %s"), *Hit.GetActor()->GetName());
-		UE_LOG(LogClass, Log, TEXT("Mesh Mass: %f"), MeshRootComp->GetMass());
+			UStaticMeshComponent* MeshRootComp = Cast<UStaticMeshComponent>(Hit.GetActor()->GetRootComponent());
 
-		MeshRootComp->AddForce(CameraForward*100000*MeshRootComp->GetMass());
+			UE_LOG(LogClass, Log, TEXT("I Hit: %s"), *Hit.GetActor()->GetName());
+			UE_LOG(LogClass, Log, TEXT("Mesh Mass: %f"), MeshRootComp->GetMass());
+
+			MeshRootComp->AddForce(CameraForward*100000*MeshRootComp->GetMass());
+		}
 
 	}
 
