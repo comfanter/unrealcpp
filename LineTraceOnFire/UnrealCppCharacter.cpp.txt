@@ -3,6 +3,8 @@
 // https://github.com/Harrison1/unrealcpp 
 // https://severallevels.io
 // https://harrisonmcguire.com
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/ECollisionChannel/
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/UWorld/LineTraceSingleByChannel/
 
 #include "UnrealCPPCharacter.h"
 #include "UnrealCPPProjectile.h"
