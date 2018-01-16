@@ -52,6 +52,4 @@ void ACameraDirector::Tick(float DeltaTime)
             }
         }
     }
-
 }
-

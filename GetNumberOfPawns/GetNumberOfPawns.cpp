@@ -2,6 +2,7 @@
 // UE4 Version 4.18.2
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
+// https://harrisonmcguire.com
 
 #include "GetNumberOfPawns.h"
 

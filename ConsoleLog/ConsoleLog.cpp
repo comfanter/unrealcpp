@@ -2,6 +2,7 @@
 // UE4 Version 4.18.2
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
+// https://harrisonmcguire.com
 
 // define a print message function to print to screen
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)

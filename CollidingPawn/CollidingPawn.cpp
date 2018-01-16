@@ -2,6 +2,7 @@
 // Version 4.18
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
+// https://harrisonmcguire.com
 // https://docs.unrealengine.com/latest/INT/Programming/Tutorials/Components/index.html
 
 #include "CollidingPawn.h"
