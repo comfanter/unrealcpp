@@ -3,6 +3,7 @@
 // https://github.com/Harrison1/unrealcpp
 // https://severallevels.io
 // https://harrisonmcguire.com
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/FTimerManager/SetTimer/4/
 
 #include "TimerActor.h"
 #include "TimerManager.h"
