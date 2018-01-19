@@ -30,14 +30,13 @@ ASwingDoor::ASwingDoor()
         Door->SetWorldScale3D(FVector(1.f));
 	}
 
+	isOpen = false;
 }
 
 // Called when the game starts or when spawned
 void ASwingDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &ASwingDoor::SwingOpen, 2.0f);
 	
 }
 
@@ -46,14 +45,31 @@ void ASwingDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	{
+		float CurrentRotation = GetActorRotation().Yaw;
+
+		if(!isOpen && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
+		{
+			CurrentRotation += DeltaTime*50;
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
+			CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
+			FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
+			SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
+
+		}
+
+		if(FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f)) 
+		{
+			isOpen = true;
+		}
+	}
+
 }
 
 void ASwingDoor::SwingOpen()
 {
 	GLog->Log("Open Door");
-	
-	FQuat QuatRotation = FQuat(FRotator(0, 90, 0));
-	
-	SetActorRelativeRotation(QuatRotation, false, 0, ETeleportType::None);
+
+	isOpen = false;
 }
 
