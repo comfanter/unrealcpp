@@ -11,6 +11,7 @@
 // add constructor header
 #include "ConstructorHelpers.h"
 #include "TimerManager.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASwingDoor::ASwingDoor()
@@ -20,6 +21,11 @@ ASwingDoor::ASwingDoor()
 
 	UStaticMeshComponent* Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
     RootComponent = Door;
+
+	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
+	BoxComp->InitBoxExtent(FVector(300,100,300));
+	BoxComp->SetCollisionProfileName("Trigger");
+	BoxComp->SetupAttachment(RootComponent);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorAsset(TEXT("/Game/StarterContent/Props/SM_Door.SM_Door"));
 
@@ -49,12 +55,14 @@ void ASwingDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(isClosed) 
+	DrawDebugBox(GetWorld(), BoxComp->GetComponentLocation(), BoxComp->GetScaledBoxExtent(), FColor::Turquoise, false, -1, 0, 5);
+
+	if(Opening) 
 	{
 		OpenDoor(DeltaTime);
 	}
 
-	if(isOpen)
+	if(Closing)
 	{
 		CloseDoor(DeltaTime);
 	}
@@ -63,11 +71,11 @@ void ASwingDoor::Tick(float DeltaTime)
 
 void ASwingDoor::OpenDoor(float dt)
 {
-	GLog->Log("Opening Door");
+	// GLog->Log("Opening Door");
 
 	float CurrentRotation = GetActorRotation().Yaw;
 
-	if(isClosed && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
+	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
 	{
 		CurrentRotation += dt*50;
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
@@ -79,18 +87,20 @@ void ASwingDoor::OpenDoor(float dt)
 
 	if(FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f)) 
 	{
-		isOpen = true;
-		isClosed = false;
+
+
+		Closing = false;
+		Opening = false;
 	}
 }
 
 void ASwingDoor::CloseDoor(float dt)
 {
-	GLog->Log("Closing Door");
+	// GLog->Log("Closing Door");
 
 	float CurrentRotation = GetActorRotation().Yaw;
 
-	if(isOpen && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
+	if(Closing && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
 	{
 		CurrentRotation -= dt*50;
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
@@ -102,7 +112,26 @@ void ASwingDoor::CloseDoor(float dt)
 
 	if(FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f)) 
 	{
-		isOpen = false;
-		isClosed = true;
+
+		Closing = false;
+		Opening = false;
 	}
+}
+
+void ASwingDoor::ToggleDoor() 
+{
+	GLog->Log("Toggle This Door");
+	
+	if(isClosed) {
+		isClosed = false;
+		Closing = false;
+		isOpen = true;
+		Opening = true;
+	} else {
+		isOpen = false;
+		Opening = false;
+		isClosed = true;
+		Closing = true;
+	}
+	
 }

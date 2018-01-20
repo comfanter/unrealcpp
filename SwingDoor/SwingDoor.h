@@ -34,6 +34,13 @@ public:
 	UFUNCTION()
 	void CloseDoor(float dt);
 
+	// declare sphere comp
+	UPROPERTY(VisibleAnywhere, Category = "BoxComp")
+	class UBoxComponent* BoxComp;
+
+	UFUNCTION()
+	void ToggleDoor();
+
 	FTimerHandle MemberTimerHandle;
 
 	bool Opening;
