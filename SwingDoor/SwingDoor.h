@@ -34,6 +34,8 @@ public:
 	UFUNCTION()
 	void CloseDoor(float dt);
 
+	class UStaticMeshComponent* Door;
+
 	// declare sphere comp
 	UPROPERTY(VisibleAnywhere, Category = "BoxComp")
 	class UBoxComponent* BoxComp;

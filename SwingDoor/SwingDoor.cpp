@@ -19,15 +19,15 @@ ASwingDoor::ASwingDoor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	UStaticMeshComponent* Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
-    RootComponent = Door;
-
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
-	BoxComp->InitBoxExtent(FVector(300,100,300));
+	BoxComp->InitBoxExtent(FVector(100,100,100));
 	BoxComp->SetCollisionProfileName("Trigger");
-	BoxComp->SetupAttachment(RootComponent);
+	RootComponent = BoxComp;
 
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorAsset(TEXT("/Game/StarterContent/Props/SM_Door.SM_Door"));
+	Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
+    Door->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorAsset(TEXT("/Game/StarterContent/Props/SM_Door.SM_Door"));
 
 	if (DoorAsset.Succeeded())
     {
@@ -35,6 +35,8 @@ ASwingDoor::ASwingDoor()
         Door->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
         Door->SetWorldScale3D(FVector(1.f));
 	}
+
+
 
 	isOpen = false;
 	isClosed = true;
@@ -78,7 +80,7 @@ void ASwingDoor::OpenDoor(float dt)
 	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
 	{
 		CurrentRotation += dt*50;
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
+		// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
 		CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
 		FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
 		SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
@@ -103,7 +105,7 @@ void ASwingDoor::CloseDoor(float dt)
 	if(Closing && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
 	{
 		CurrentRotation -= dt*50;
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
+		// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
 		CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
 		FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
 		SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
@@ -121,6 +123,8 @@ void ASwingDoor::CloseDoor(float dt)
 void ASwingDoor::ToggleDoor() 
 {
 	GLog->Log("Toggle This Door");
+
+	UE_LOG(LogTemp,Warning,TEXT("Door FV: %s"), *Door->GetForwardVector().ToString());
 	
 	if(isClosed) {
 		isClosed = false;
