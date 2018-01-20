@@ -31,6 +31,10 @@ ASwingDoor::ASwingDoor()
 	}
 
 	isOpen = false;
+	isClosed = true;
+
+	Opening = false;
+	Closing = false;
 }
 
 // Called when the game starts or when spawned
@@ -45,31 +49,60 @@ void ASwingDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if(isClosed) 
 	{
-		float CurrentRotation = GetActorRotation().Yaw;
+		OpenDoor(DeltaTime);
+	}
 
-		if(!isOpen && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
-		{
-			CurrentRotation += DeltaTime*50;
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
-			CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
-			FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
-			SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
-
-		}
-
-		if(FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f)) 
-		{
-			isOpen = true;
-		}
+	if(isOpen)
+	{
+		CloseDoor(DeltaTime);
 	}
 
 }
 
-void ASwingDoor::SwingOpen()
+void ASwingDoor::OpenDoor(float dt)
 {
-	GLog->Log("Open Door");
+	GLog->Log("Opening Door");
 
-	isOpen = false;
+	float CurrentRotation = GetActorRotation().Yaw;
+
+	if(isClosed && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
+	{
+		CurrentRotation += dt*50;
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
+		CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
+		FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
+		SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
+
+	}
+
+	if(FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f)) 
+	{
+		isOpen = true;
+		isClosed = false;
+	}
 }
 
+void ASwingDoor::CloseDoor(float dt)
+{
+	GLog->Log("Closing Door");
+
+	float CurrentRotation = GetActorRotation().Yaw;
+
+	if(isOpen && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
+	{
+		CurrentRotation -= dt*50;
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
+		CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
+		FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
+		SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
+
+	}
+
+	if(FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f)) 
+	{
+		isOpen = false;
+		isClosed = true;
+	}
+}

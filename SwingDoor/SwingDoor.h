@@ -29,10 +29,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void SwingOpen();
+	void OpenDoor(float dt);
+
+	UFUNCTION()
+	void CloseDoor(float dt);
 
 	FTimerHandle MemberTimerHandle;
 
+	bool Opening;
+	bool Closing;
+
 	bool isOpen;
+	bool isClosed;
 	
 };
