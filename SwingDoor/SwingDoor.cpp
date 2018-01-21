@@ -35,14 +35,14 @@ ASwingDoor::ASwingDoor()
 	Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
     Door->SetupAttachment(RootComponent);
 
-	// static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorAsset(TEXT("/Game/StarterContent/Props/SM_Door.SM_Door"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorAsset(TEXT("/Game/StarterContent/Props/SM_Door.SM_Door"));
 
-	// if (DoorAsset.Succeeded())
-    // {
-    //     Door->SetStaticMesh(DoorAsset.Object);
-    //     Door->SetRelativeLocation(FVector(0.0f, 50.0f, -100.0f));
-    //     Door->SetWorldScale3D(FVector(1.f));
-	// }
+	if (DoorAsset.Succeeded())
+    {
+        Door->SetStaticMesh(DoorAsset.Object);
+        Door->SetRelativeLocation(FVector(0.0f, 50.0f, -100.0f));
+        Door->SetWorldScale3D(FVector(1.f));
+	}
 
 	isOpen = false;
 	isClosed = true;
@@ -86,13 +86,11 @@ void ASwingDoor::OpenDoor(float dt)
 {
 	// GLog->Log("Opening Door");
 
-	float CurrentRotation = Door->GetComponentRotation().Yaw;
-	float RotationMax = CurrentRotation+90.0f;
+	float CurrentRotation = Door->RelativeRotation.Yaw;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation max: %f"), RotationMax));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation max: %f"), CurrentRotation));
 
-
-	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, RotationMax, 0.5f))
+	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
 	{
 		// CurrentRotation += dt*50;
 		float AddRot = dt*50;
@@ -115,7 +113,7 @@ void ASwingDoor::CloseDoor(float dt)
 {
 	// GLog->Log("Closing Door");
 
-	float CurrentRotation = Door->GetComponentRotation().Yaw;
+	float CurrentRotation = Door->RelativeRotation.Yaw;
 
 	if(Closing && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
 	{
