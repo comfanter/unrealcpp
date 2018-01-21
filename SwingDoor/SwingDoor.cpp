@@ -5,6 +5,7 @@
 // https://harrisonmcguire.com
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/FTimerManager/SetTimer/4/
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/GameFramework/AActor/SetActorRelativeRotation/2/index.html
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/USceneComponent/GetComponentRotation/index.html
 // WIP
 
 #include "SwingDoor.h"
@@ -20,7 +21,7 @@ ASwingDoor::ASwingDoor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
-	BoxComp->InitBoxExtent(FVector(100,100,100));
+	BoxComp->InitBoxExtent(FVector(150,100,100));
 	BoxComp->SetCollisionProfileName("Trigger");
 	RootComponent = BoxComp;
 
@@ -32,7 +33,7 @@ ASwingDoor::ASwingDoor()
 	if (DoorAsset.Succeeded())
     {
         Door->SetStaticMesh(DoorAsset.Object);
-        Door->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+        Door->SetRelativeLocation(FVector(0.0f, 50.0f, -100.0f));
         Door->SetWorldScale3D(FVector(1.f));
 	}
 
@@ -75,21 +76,21 @@ void ASwingDoor::OpenDoor(float dt)
 {
 	// GLog->Log("Opening Door");
 
-	float CurrentRotation = GetActorRotation().Yaw;
+	float CurrentRotation = Door->GetComponentRotation().Yaw;
 
 	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
 	{
-		CurrentRotation += dt*50;
+		// CurrentRotation += dt*50;
+		float AddRot = dt*50;
 		// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
-		CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
-		FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
-		SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
+		// CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
+		FRotator NewRotation = FRotator(0.0f, AddRot, 0.0f);
+		Door->AddRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
 
 	}
 
 	if(FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f)) 
 	{
-
 
 		Closing = false;
 		Opening = false;
@@ -100,21 +101,21 @@ void ASwingDoor::CloseDoor(float dt)
 {
 	// GLog->Log("Closing Door");
 
-	float CurrentRotation = GetActorRotation().Yaw;
+	float CurrentRotation = Door->GetComponentRotation().Yaw;
 
 	if(Closing && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
 	{
-		CurrentRotation -= dt*50;
+		// CurrentRotation -= dt*50;
 		// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
-		CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
-		FRotator NewRotation = FRotator(0.0f, CurrentRotation, 0.0f);
-		SetActorRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
+		// CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
+		float MinusRot = -dt*50;
+		FRotator NewRotation = FRotator(0.0f, MinusRot, 0.0f);
+		Door->AddRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
 
 	}
 
 	if(FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f)) 
 	{
-
 		Closing = false;
 		Opening = false;
 	}
