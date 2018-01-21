@@ -15,6 +15,9 @@
 #include "ConstructorHelpers.h"
 #include "TimerManager.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 ASwingDoor::ASwingDoor()
@@ -22,13 +25,8 @@ ASwingDoor::ASwingDoor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	FVector RSize = FVector(150,100,100);
-	RSize.X += GetActorRotation().Roll;
-	RSize.Y += GetActorRotation().Pitch;
-	RSize.Z += GetActorRotation().Yaw;
-
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
-	BoxComp->InitBoxExtent(RSize);
+	BoxComp->InitBoxExtent(FVector(150,100,100));
 	BoxComp->SetCollisionProfileName("Trigger");
 	RootComponent = BoxComp;
 
@@ -57,11 +55,9 @@ void ASwingDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FVector RSize = FVector(150,100,100);
+	// GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("actor location: %s"), *GetActorLocation().ToString()));
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("actor location: %s"), *GetActorLocation().ToString()));
-
-	DrawDebugBox(GetWorld(), GetActorLocation(), RSize, FQuat(GetActorRotation()), FColor::Turquoise, true, -1, 0, 2);
+	DrawDebugBox(GetWorld(), GetActorLocation(), BoxComp->GetScaledBoxExtent(), FQuat(GetActorRotation()), FColor::Turquoise, true, -1, 0, 2);
 	
 }
 
@@ -88,7 +84,7 @@ void ASwingDoor::OpenDoor(float dt)
 
 	float CurrentRotation = Door->RelativeRotation.Yaw;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation max: %f"), CurrentRotation));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation max: %f"), CurrentRotation));
 
 	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
 	{
@@ -138,6 +134,15 @@ void ASwingDoor::ToggleDoor()
 	GLog->Log("Toggle This Door");
 
 	UE_LOG(LogTemp,Warning,TEXT("Door FV: %s"), *Door->GetForwardVector().ToString());
+
+	//Find the actor that handles control for the local player.
+	ACharacter* OurPlayerController = UGameplayStatics::GetPlayerCharacter(this, 0);
+
+	UCameraComponent* PlayerCamera = OurPlayerController->FindComponentByClass<UCameraComponent>();
+
+	FVector ForwardVector = PlayerCamera->GetForwardVector();
+
+	UE_LOG(LogTemp,Warning,TEXT("Camera FV FROM THE DOOR ACTOR: %s"), *ForwardVector.ToString());
 	
 	if(isClosed) {
 		isClosed = false;
