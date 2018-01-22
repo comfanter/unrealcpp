@@ -8,6 +8,7 @@
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/USceneComponent/GetComponentRotation/index.html
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Kismet/UKismetSystemLibrary/DrawDebugBox/
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/DrawDebugBox/2/
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Math/FVector/DotProduct/index.html
 // WIP
 
 #include "SwingDoor.h"
@@ -48,6 +49,10 @@ ASwingDoor::ASwingDoor()
 	Opening = false;
 	Closing = false;
 
+	CalcThree = 0.0f;
+	degree = 0.0f;
+	AddRot = 0.0f;
+
 }
 
 // Called when the game starts or when spawned
@@ -86,10 +91,18 @@ void ASwingDoor::OpenDoor(float dt)
 
 	// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation max: %f"), CurrentRotation));
 
-	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, 90.0f, 0.5f))
+	if(CalcThree > 0) {
+		degree = 90.0f;
+		AddRot = dt*50;
+	} else {
+		degree = -90.0f;
+		AddRot = -dt*50;
+	}
+
+	if(Opening && !FMath::IsNearlyEqual(CurrentRotation, degree, 0.5f))
 	{
 		// CurrentRotation += dt*50;
-		float AddRot = dt*50;
+		// float AddRot = dt*50;
 		// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
 		// CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
 		FRotator NewRotation = FRotator(0.0f, AddRot, 0.0f);
@@ -111,12 +124,18 @@ void ASwingDoor::CloseDoor(float dt)
 
 	float CurrentRotation = Door->RelativeRotation.Yaw;
 
+	if(CurrentRotation > 0) {
+		MinusRot = -dt*50;
+	} else {
+		MinusRot = +dt*50;
+	}
+
 	if(Closing && !FMath::IsNearlyEqual(CurrentRotation, 0.0f, 0.5f))
 	{
 		// CurrentRotation -= dt*50;
 		// GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("rotation: %f"), CurrentRotation));
 		// CurrentRotation = FMath::Clamp(CurrentRotation, 0.0f, 90.0f);
-		float MinusRot = -dt*50;
+		// float MinusRot = -dt*50;
 		FRotator NewRotation = FRotator(0.0f, MinusRot, 0.0f);
 		Door->AddRelativeRotation(FQuat(NewRotation), false, 0, ETeleportType::None);
 
@@ -133,27 +152,50 @@ void ASwingDoor::ToggleDoor()
 {
 	GLog->Log("Toggle This Door");
 
-	UE_LOG(LogTemp,Warning,TEXT("Door FV: %s"), *Door->GetForwardVector().ToString());
+	// UE_LOG(LogTemp,Warning,TEXT("Door FV: %s"), *Door->GetForwardVector().ToString());
+	// UE_LOG(LogTemp,Warning,TEXT("Box Comp: %s"), *BoxComp->GetForwardVector().ToString());
 
 	//Find the actor that handles control for the local player.
+	// ACharacter* OurPlayerController = UGameplayStatics::GetPlayerCharacter(this, 0);
+
+	// UCameraComponent* PlayerCamera = OurPlayerController->FindComponentByClass<UCameraComponent>();
+
+	// FVector ForwardVector = PlayerCamera->GetForwardVector();
+
+	// UE_LOG(LogTemp,Warning,TEXT("Camera FV FROM THE DOOR ACTOR: %s"), *ForwardVector.ToString());
+
+	// float Calc = Door->GetForwardVector().X + ForwardVector.X;
+	// float CalcTwo = FVector::DotProduct(Door->GetForwardVector(), ForwardVector);
+
+	// // Good Take Calc Three
+	// float CalcThree = FVector::DotProduct(BoxComp->GetForwardVector(), ForwardVector);
+
+	// UE_LOG(LogTemp,Warning,TEXT("Calc: %f"), Calc );
+	// UE_LOG(LogTemp,Warning,TEXT("DotProduct: %f"), CalcTwo );
+	// UE_LOG(LogTemp,Warning,TEXT("Door FV: %s"), *Door->GetForwardVector().ToString());
+	// UE_LOG(LogTemp,Warning,TEXT("DotProduct Three: %f"), CalcThree);
+
 	ACharacter* OurPlayerController = UGameplayStatics::GetPlayerCharacter(this, 0);
 
 	UCameraComponent* PlayerCamera = OurPlayerController->FindComponentByClass<UCameraComponent>();
 
 	FVector ForwardVector = PlayerCamera->GetForwardVector();
 
-	UE_LOG(LogTemp,Warning,TEXT("Camera FV FROM THE DOOR ACTOR: %s"), *ForwardVector.ToString());
+	CalcThree = FVector::DotProduct(BoxComp->GetForwardVector(), ForwardVector);
+
 	
 	if(isClosed) {
 		isClosed = false;
 		Closing = false;
 		isOpen = true;
 		Opening = true;
+
 	} else {
 		isOpen = false;
 		Opening = false;
 		isClosed = true;
 		Closing = true;
+
 	}
 	
 }

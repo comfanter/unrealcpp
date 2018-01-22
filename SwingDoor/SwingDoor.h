@@ -55,5 +55,10 @@ public:
 	bool isClosed;
 
 	FVector RSize;
+
+	float CalcThree;
+	float degree;
+	float AddRot;
+	float MinusRot;
 	
 };
