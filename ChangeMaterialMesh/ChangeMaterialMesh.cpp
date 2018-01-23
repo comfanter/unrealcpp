@@ -55,7 +55,6 @@ void AChangeMaterialMesh::OnOverlapBegin(class UPrimitiveComponent* OverlappedCo
 {
 	if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
 	{
-
 		MyMesh->SetMaterial(0, OnMaterial);
 	}
 }
