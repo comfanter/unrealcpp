@@ -1,5 +1,5 @@
 // Harrison McGuire 
-// UE4 Version 4.18.2 
+// UE4 Version 4.18.3
 // https://github.com/Harrison1/unrealcpp 
 // https://severallevels.io 
 // https://harrisonmcguire.com
@@ -29,8 +29,6 @@ AChangeMaterialMesh::AChangeMaterialMesh()
 	OnMaterial = CreateDefaultSubobject<UMaterial>(TEXT("OnMaterial"));
 	OffMaterial = CreateDefaultSubobject<UMaterial>(TEXT("OffMaterial"));
 
-	isOn = false;
-
 	MyBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AChangeMaterialMesh::OnOverlapBegin);
 
 }
@@ -42,14 +40,7 @@ void AChangeMaterialMesh::BeginPlay()
 
 	DrawDebugBox(GetWorld(), GetActorLocation(), FVector(100,100,100), FColor::White, true, -1, 0, 10);
 
-	if(isOn) 
-	{
-		MyMesh->SetMaterial(0, OnMaterial);
-	}
-	else 
-	{
-		MyMesh->SetMaterial(0, OffMaterial);
-	}
+	MyMesh->SetMaterial(0, OffMaterial);
 	
 }
 
@@ -64,11 +55,7 @@ void AChangeMaterialMesh::OnOverlapBegin(class UPrimitiveComponent* OverlappedCo
 {
 	if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
 	{
-		isOn = true;
-
-		GLog->Log("Set new material");
 
 		MyMesh->SetMaterial(0, OnMaterial);
 	}
 }
-
