@@ -203,11 +203,9 @@ void AUnrealCPPCharacter::OnAction()
 {
 	FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
 
-	UE_LOG(LogTemp,Warning,TEXT("Camera FV: %s"), *ForwardVector.ToString());
-
 	if(CurrentDoor) 
 	{
-		CurrentDoor->ToggleDoor();
+		CurrentDoor->ToggleDoor(ForwardVector);
 	}
 }
 

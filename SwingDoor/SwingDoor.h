@@ -34,9 +34,6 @@ public:
 	UFUNCTION()
 	void CloseDoor(float dt);
 
-	// UPROPERTY(VisibleAnywhere)
-	// class UStaticMeshComponent* Door;
-
 	class UStaticMeshComponent* Door;
 
 	// declare sphere comp
@@ -44,21 +41,17 @@ public:
 	class UBoxComponent* BoxComp;
 
 	UFUNCTION()
-	void ToggleDoor();
+	void ToggleDoor(FVector ForwardVector);
 
 	FTimerHandle MemberTimerHandle;
 
 	bool Opening;
 	bool Closing;
-
-	bool isOpen;
 	bool isClosed;
 
-	FVector RSize;
-
-	float CalcThree;
-	float degree;
-	float AddRot;
-	float MinusRot;
-	
+	float DotP;
+	float MaxDegree;
+	float AddRotation;
+	float PosNeg;
+	float DoorCurrentRotation;
 };
