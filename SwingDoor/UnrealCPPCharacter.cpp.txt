@@ -201,10 +201,9 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction() 
 {
-	FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
-
 	if(CurrentDoor) 
 	{
+		FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
 		CurrentDoor->ToggleDoor(ForwardVector);
 	}
 }

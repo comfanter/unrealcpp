@@ -8,7 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "SwingDoor/SwingDoor.h"
+#include "SwingDoor.h"
 #include "UnrealCPPCharacter.generated.h"
 
 class UInputComponent;

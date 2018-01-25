@@ -3,7 +3,6 @@
 // https://github.com/Harrison1/unrealcpp 
 // https://severallevels.io 
 // https://harrisonmcguire.com
-// WIP
 
 #pragma once
 
