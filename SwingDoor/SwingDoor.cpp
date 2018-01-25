@@ -16,10 +16,7 @@
 #include "SwingDoor.h"
 // include header files
 #include "ConstructorHelpers.h"
-#include "TimerManager.h"
 #include "DrawDebugHelpers.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -130,7 +127,7 @@ void ASwingDoor::CloseDoor(float dt)
 void ASwingDoor::ToggleDoor(FVector ForwardVector) 
 {
 
-	// alternatively you can grab the froward vector from the character inside theis function, remember to #include "GameFramework/Character.h" at the top of the script
+	// alternatively you can grab the froward vector from the character inside theis function, remember to #include "GameFramework/Character.h" and #include "Camera/CameraComponent.h" at the top of the script
 	// ACharacter* OurPlayerController = UGameplayStatics::GetPlayerCharacter(this, 0);
 
 	// UCameraComponent* PlayerCamera = OurPlayerController->FindComponentByClass<UCameraComponent>();
