@@ -43,8 +43,6 @@ public:
 	UFUNCTION()
 	void ToggleDoor(FVector ForwardVector);
 
-	FTimerHandle MemberTimerHandle;
-
 	bool Opening;
 	bool Closing;
 	bool isClosed;
