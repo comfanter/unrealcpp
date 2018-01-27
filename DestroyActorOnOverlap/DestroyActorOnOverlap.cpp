@@ -8,6 +8,9 @@
 #include "DestroyActorOnOverlap.h"
 // include draw debug helpers header file
 #include "DrawDebugHelpers.h"
+// include sphere comp header file
+#include "Components/SphereComponent.h"
+
 
 // Sets default values
 ADestroyActorOnOverlap::ADestroyActorOnOverlap()
