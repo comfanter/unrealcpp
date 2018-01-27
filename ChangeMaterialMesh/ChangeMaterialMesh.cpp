@@ -4,6 +4,8 @@
 // https://severallevels.io 
 // https://harrisonmcguire.com
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UMeshComponent/SetMaterial/index.html
+// // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentBeginOverlap/
+
 
 #include "ChangeMaterialMesh.h"
 // include draw debug helpers header file
