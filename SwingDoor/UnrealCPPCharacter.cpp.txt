@@ -3,6 +3,8 @@
 // https://github.com/Harrison1/unrealcpp 
 // https://severallevels.io
 // https://harrisonmcguire.com
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentBeginOverlap/
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentEndOverlap/
 
 #include "UnrealCPPCharacter.h"
 #include "UnrealCPPProjectile.h"
