@@ -8,6 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/TimelineComponent.h"
 #include "OpenDoorTimelineCurve.generated.h"
 
 UCLASS()
@@ -26,7 +27,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+ 
+    /*The timeline that will make the actor float*/
+    FTimeline MyTimeline;
 
-	
-	
 };

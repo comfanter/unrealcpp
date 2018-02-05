@@ -4,6 +4,9 @@
 // https://severallevels.io
 // https://harrisonmcguire.com
 
+// helpful links
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/FTimeline/
+
 #include "OpenDoorTimelineCurve.h"
 
 
@@ -28,4 +31,3 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
