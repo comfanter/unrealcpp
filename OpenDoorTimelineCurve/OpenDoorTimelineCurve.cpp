@@ -22,7 +22,6 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
 void AOpenDoorTimelineCurve::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -30,4 +29,31 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// FVector MyLoc = GetActorLocation();
+    // FVector TargetLoc = FVector(0,0,90);
+    // FVector Dir = (TargetLoc - MyLoc);
+    // Dir.Normalize();
+    // FVector RotNew = FVector(0, 90, 0);
+    // FRotator NewRot = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw, 90.0f);
+    // SetActorRotation(FMath::Lerp(GetActorRotation(),RotNew.Rotation(),0.01f));
+
+    FVector MyLoc = GetActorLocation();
+    FVector TargetLoc = FVector(0,0,90);
+    FVector Dir = (TargetLoc - MyLoc);
+    Dir.Normalize();
+    FVector RotNew = FVector(0, 90, 0);
+    FRotator NewRot = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw, 90.0f);
+    SetActorRotation(FMath::Lerp(GetActorRotation(),RotNew.Rotation(),MyCurveFloat));
+
+}
+
+void AOpenDoorTimelineCurve::OpenDoor()
+{
+	// FVector MyLoc = GetActorLocation();
+    // FVector TargetLoc = FVector(0,0,90);
+    // FVector Dir = (TargetLoc - MyLoc);
+    // Dir.Normalize();
+    // FVector RotNew = FVector(0, 90, 0);
+    // FRotator NewRot = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw, 90.0f);
+    // SetActorRotation(FMath::Lerp(GetActorRotation(),RotNew.Rotation(),MyCurveFloat));
 }

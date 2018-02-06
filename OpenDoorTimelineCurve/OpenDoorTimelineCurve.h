@@ -31,4 +31,8 @@ public:
     /*The timeline that will make the actor float*/
     FTimeline MyTimeline;
 
+    void OpenDoor();
+
+	UPROPERTY(EditAnywhere)
+    UCurveFloat* MyCurveFloat;
 };
