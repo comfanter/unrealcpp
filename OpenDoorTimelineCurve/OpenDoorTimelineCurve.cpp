@@ -43,7 +43,7 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
     Dir.Normalize();
     FVector RotNew = FVector(0, 90, 0);
     FRotator NewRot = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw, 90.0f);
-    SetActorRotation(FMath::Lerp(GetActorRotation(),RotNew.Rotation(),MyCurveFloat));
+    SetActorRotation(FMath::Lerp(GetActorRotation(),RotNew.Rotation(),0.5f));
 
 }
 
