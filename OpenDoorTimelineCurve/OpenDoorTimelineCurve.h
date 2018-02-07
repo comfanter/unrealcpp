@@ -9,6 +9,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/TimelineComponent.h"
+#include "Components/BoxComponent.h"
 #include "OpenDoorTimelineCurve.generated.h"
 
 UCLASS()
@@ -35,4 +36,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
     UCurveFloat* MyCurveFloat;
+
+	bool Open;
+
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* MyMesh;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* MyBoxComponent;
 };
