@@ -39,9 +39,20 @@ public:
 
 	bool Open;
 
+	float RotateValue;
+
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* MyMesh;
+	UStaticMeshComponent* Door;
 
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* MyBoxComponent;
+
+	// declare overlap begin function
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// declare overlap end function
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 };
