@@ -14,6 +14,7 @@
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Kismet/UKismetMathLibrary/index.html
 
 #include "OpenDoorWithLerp.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
