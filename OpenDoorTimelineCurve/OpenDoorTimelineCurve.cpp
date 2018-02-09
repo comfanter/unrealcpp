@@ -23,7 +23,7 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    Open = false;
+    Open = true;
 
     MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("My Box Component"));
     MyBoxComponent->InitBoxExtent(FVector(50,50,50));
@@ -42,12 +42,20 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
 void AOpenDoorTimelineCurve::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+    NewRotation = FRotator(0.0f, 90.0f, 0.0f);
+
+    FQua = FQuat(NewRotation);
 }
 
 // Called every frame
 void AOpenDoorTimelineCurve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+    
+    DoorRotation = Door->RelativeRotation;
 
     if(Open)
     {
@@ -56,20 +64,28 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
         // FVector Dir = (TargetLoc - MyLoc);
         // Dir.Normalize();
 
-        
-
         // FRotator NewRot = FRotator(Door->GetComponentRotation().Pitch, Door->GetComponentRotation().Yaw, 90.0f);
-        FVector RotNew = FVector(0, RotateValue, 0);
-        RotNew.Normalize();
-        Door->SetRelativeRotation(FMath::Lerp(Door->GetComponentRotation(), RotNew.Rotation(), 0.01f));
+        // RotNew.Normalize();
+
+
+        
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Door Rotation: %f"), DoorRotation.Yaw));
+
+        if(DoorRotation.Yaw < 90 )
+        {
+            Door->SetRelativeRotation(FMath::Lerp(DoorRotation, FRotator(0.0f, 90.0f, 0.0f), 0.01f));
+        }
         
     } 
-    else if (!FMath::IsNearlyEqual(Door->GetComponentRotation().Yaw, 0.0f, 1.5f))
+    // else if (!FMath::IsNearlyEqual(Door->GetComponentRotation().Yaw, 0.0f, 1.5f))
+    else
     {
         // FRotator NewRot = FRotator(Door->GetComponentRotation().Pitch, Door->GetComponentRotation().Yaw, 0.0f);
-        FVector RotNewR = FVector(0, 0, 0);
-        RotNewR.Normalize();
-        Door->SetRelativeRotation(FMath::Lerp(Door->GetComponentRotation(), RotNewR.Rotation(), 0.01f));
+        // FVector RotNewR = FVector(0, 0, 0);
+        // FQuat Qua = FQuat(RotNewR.Rotation());
+        // FQuat CQua = FQuat(Door->GetComponentRotation());
+        // RotNewR.Normalize();
+        // Door->SetRelativeRotation(FMath::Lerp(CQua, Qua, 0.01f));
     }
 
 }
@@ -107,8 +123,6 @@ void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* Overlappe
     {
         FVector PawnLocation = OtherActor->GetActorLocation();
         FVector Direction = GetActorLocation() - PawnLocation;
-        // float Value = 90.0f;
-        // if(Direction)
         FVector Dir = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
 
         if(Dir.X > 0.0f)
