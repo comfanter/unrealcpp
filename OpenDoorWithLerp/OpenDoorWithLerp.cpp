@@ -50,7 +50,7 @@ void AOpenDoorWithLerp::Tick(float DeltaTime)
 
 	DoorRotation = Door->RelativeRotation;
 
-    if(Open && DoorRotation.Yaw < 90.0f)
+    if(Open)
     {
         Door->SetRelativeRotation(FMath::Lerp(FQuat(DoorRotation), FQuat(FRotator(0.0f, RotateValue, 0.0f)), 0.01f));   
     } 
