@@ -13,17 +13,16 @@
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Kismet/UKismetMathLibrary/LessLess_VectorRotator/index.html
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Kismet/UKismetMathLibrary/index.html
 
-#include "OpenDoorTimelineCurve.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "OpenDoorWithLerp.h"
+
 
 // Sets default values
-AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
+AOpenDoorWithLerp::AOpenDoorWithLerp()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    Open = false;
+	Open = false;
 
     MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("My Box Component"));
     MyBoxComponent->InitBoxExtent(FVector(50,50,50));
@@ -33,36 +32,36 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
     Door->SetRelativeLocation(FVector(0.0f, 50.0f, -50.0f));
     Door->SetupAttachment(RootComponent);
 
-    MyBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AOpenDoorTimelineCurve::OnOverlapBegin);
-    MyBoxComponent->OnComponentEndOverlap.AddDynamic(this, &AOpenDoorTimelineCurve::OnOverlapEnd);
+    MyBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AOpenDoorWithLerp::OnOverlapBegin);
+    MyBoxComponent->OnComponentEndOverlap.AddDynamic(this, &AOpenDoorWithLerp::OnOverlapEnd);
 
 }
 
 // Called when the game starts or when spawned
-void AOpenDoorTimelineCurve::BeginPlay()
+void AOpenDoorWithLerp::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
 // Called every frame
-void AOpenDoorTimelineCurve::Tick(float DeltaTime)
+void AOpenDoorWithLerp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    DoorRotation = Door->RelativeRotation;
+	DoorRotation = Door->RelativeRotation;
 
     if(Open && DoorRotation.Yaw < 90.0f)
     {
-        Door->SetRelativeRotation(FMath::Lerp(DoorRotation, FRotator(0.0f, RotateValue, 0.0f), 0.01f));   
+        Door->SetRelativeRotation(FMath::Lerp(FQuat(DoorRotation), FQuat(FRotator(0.0f, RotateValue, 0.0f)), 0.01f));   
     } 
     else
     {
-        Door->SetRelativeRotation(FMath::Lerp(DoorRotation, FRotator(0.0f, 0.0f, 0.0f), 0.01f));
+        Door->SetRelativeRotation(FMath::Lerp(FQuat(DoorRotation), FQuat(FRotator(0.0f, 0.0f, 0.0f)), 0.01f));
     }
 
 }
 
-void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AOpenDoorWithLerp::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
     {
@@ -83,7 +82,7 @@ void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* Overlappe
     }
 }
 
-void AOpenDoorTimelineCurve::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AOpenDoorWithLerp::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
     if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) )  
     {

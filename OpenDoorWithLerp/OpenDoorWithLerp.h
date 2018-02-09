@@ -8,18 +8,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/TimelineComponent.h"
 #include "Components/BoxComponent.h"
-#include "OpenDoorTimelineCurve.generated.h"
+#include "OpenDoorWithLerp.generated.h"
 
 UCLASS()
-class UNREALCPP_API AOpenDoorTimelineCurve : public AActor
+class UNREALCPP_API AOpenDoorWithLerp : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AOpenDoorTimelineCurve();
+	AOpenDoorWithLerp();
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,5 +45,5 @@ public:
 	bool Open;
 	float RotateValue;
 	FRotator DoorRotation;
-
+	
 };
