@@ -6,7 +6,10 @@
 
 // helpful links
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/FTimeline/
-// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/USceneComponent/index.html
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UTimelineComponent/index.html
+// https://wiki.unrealengine.com/Timeline_in_c%2B%2B#How_to_use_Timeline_in_C.2B.2B
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Curves/UCurveFloat/GetFloatValue/index.html
+// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Curves/UCurveFloat/
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentBeginOverlap/
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentEndOverlap/
 // https://docs.unrealengine.com/latest/INT/BlueprintAPI/Math/Vector/UnrotateVector/
@@ -14,7 +17,6 @@
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Kismet/UKismetMathLibrary/index.html
 
 #include "OpenDoorTimelineCurve.h"
-#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -42,6 +44,13 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
 void AOpenDoorTimelineCurve::BeginPlay()
 {
 	Super::BeginPlay();
+
+    if (OpenCurve)
+    {
+        FOnTimelineFloat TimelineCallback;
+        TimelineCallback.BindUFunction(this, FName("ToggleDoor"));
+        MyTimeline.AddInterpFloat(OpenCurve, TimelineCallback);
+    }
 }
 
 // Called every frame
@@ -49,44 +58,53 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    DoorRotation = Door->RelativeRotation;
-
-    if(Open && DoorRotation.Yaw < 90.0f)
-    {
-        Door->SetRelativeRotation(FMath::Lerp(DoorRotation, FRotator(0.0f, RotateValue, 0.0f), 0.01f));   
-    } 
-    else
-    {
-        Door->SetRelativeRotation(FMath::Lerp(DoorRotation, FRotator(0.0f, 0.0f, 0.0f), 0.01f));
-    }
-
+    MyTimeline.TickTimeline(DeltaTime);
 }
 
 void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
-    {
-        FVector PawnLocation = OtherActor->GetActorLocation();
-        FVector Direction = GetActorLocation() - PawnLocation;
-        Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
-
-        if(Direction.X > 0.0f)
-        {
-            RotateValue = 90.0f;
-        }
-        else
-        {
-            RotateValue = -90.0f;
-        }
-
-        Open = true;
-    }
+    DoorRotation = Door->RelativeRotation;
+    Open = true;
+    MyTimeline.PlayFromStart();
 }
 
 void AOpenDoorTimelineCurve::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) )  
+
+    DoorRotation = Door->RelativeRotation;
+    Open = false;
+    MyTimeline.Reverse();
+}
+
+void AOpenDoorTimelineCurve::ToggleDoor(float Value)
+{
+    //Setting up the new location of our actor
+    if(Open) 
     {
-        Open = false;
+        TimelineValue = MyTimeline.GetPlaybackPosition();
+        CurveFloatValue = OpenCurve->GetFloatValue(TimelineValue);
+
+        FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
+
+        if (GEngine) 
+        { 
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Curve Float Value: %f"), CurveFloatValue));
+        }
+
+        Door->SetRelativeRotation(NewRotation);
+    }
+    else 
+    {
+        TimelineValue = MyTimeline.GetPlaybackPosition();
+        CurveFloatValue = OpenCurve->GetFloatValue(TimelineValue);
+
+        FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
+
+        if (GEngine) 
+        { 
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Timeline Value: %f"), CurveFloatValue));
+        }
+
+        Door->SetRelativeRotation(NewRotation);
     }
 }

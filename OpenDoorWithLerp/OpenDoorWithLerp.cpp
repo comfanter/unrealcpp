@@ -5,7 +5,6 @@
 // https://harrisonmcguire.com
 
 // helpful links
-// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/FTimeline/
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/USceneComponent/index.html
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentBeginOverlap/
 // https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UPrimitiveComponent/OnComponentEndOverlap/
