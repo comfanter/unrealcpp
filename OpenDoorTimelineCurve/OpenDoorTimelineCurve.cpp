@@ -18,6 +18,8 @@
 
 #include "OpenDoorTimelineCurve.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/Character.h"
+#include "Components/InputComponent.h"
 
 // Sets default values
 AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
@@ -45,12 +47,16 @@ void AOpenDoorTimelineCurve::BeginPlay()
 {
 	Super::BeginPlay();
 
+    RotateValue = 1.0f;
+
     if (OpenCurve)
     {
         FOnTimelineFloat TimelineCallback;
-        TimelineCallback.BindUFunction(this, FName("ToggleDoor"));
+        TimelineCallback.BindUFunction(this, FName("ControlDoor"));
         MyTimeline.AddInterpFloat(OpenCurve, TimelineCallback);
     }
+
+    ToggleDoor();
 }
 
 // Called every frame
@@ -63,26 +69,61 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
 
 void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    DoorRotation = Door->RelativeRotation;
-    Open = true;
-    MyTimeline.PlayFromStart();
+
+    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
+    {
+
+        // APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+        ACharacter* OurPlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+        // APawn* OurPlayerCharacter = UGameplayStatics::GetPlayerPawn(this, 0);
+
+        // Bind action event
+        // OurPlayerCharacter->SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+        // {
+        //     check(PlayerInputComponent);
+
+        //     PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AOpenDoorTimelineCurve::ToggleDoor);
+        // }
+        
+        
+        
+    }
+
+
+    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
+    {
+        FVector PawnLocation = OtherActor->GetActorLocation();
+        FVector Direction = GetActorLocation() - PawnLocation;
+        Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
+
+        if(Direction.X > 0.0f)
+        {
+            RotateValue = 1.0f;
+        }
+        else
+        {
+            RotateValue = -1.0f;
+        }
+
+        DoorRotation = Door->RelativeRotation;
+    }
+
 }
 
 void AOpenDoorTimelineCurve::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-
-    DoorRotation = Door->RelativeRotation;
-    Open = false;
-    MyTimeline.Reverse();
+    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) )  
+    {
+        DoorRotation = Door->RelativeRotation;
+    }
 }
 
-void AOpenDoorTimelineCurve::ToggleDoor(float Value)
+void AOpenDoorTimelineCurve::ControlDoor(float Value)
 {
-    //Setting up the new location of our actor
     if(Open) 
     {
         TimelineValue = MyTimeline.GetPlaybackPosition();
-        CurveFloatValue = OpenCurve->GetFloatValue(TimelineValue);
+        CurveFloatValue = RotateValue*OpenCurve->GetFloatValue(TimelineValue);
 
         FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
 
@@ -96,7 +137,7 @@ void AOpenDoorTimelineCurve::ToggleDoor(float Value)
     else 
     {
         TimelineValue = MyTimeline.GetPlaybackPosition();
-        CurveFloatValue = OpenCurve->GetFloatValue(TimelineValue);
+        CurveFloatValue = RotateValue*OpenCurve->GetFloatValue(TimelineValue);
 
         FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
 
@@ -107,4 +148,21 @@ void AOpenDoorTimelineCurve::ToggleDoor(float Value)
 
         Door->SetRelativeRotation(NewRotation);
     }
+}
+
+void AOpenDoorTimelineCurve::ToggleDoor() 
+{
+    Open = !Open;
+
+    if(Open)
+    {
+        Open = false;
+        MyTimeline.PlayFromStart();
+    }
+    else 
+    {
+        Open = false;
+        MyTimeline.Reverse();
+    }
+
 }

@@ -50,7 +50,10 @@ public:
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
-    void ToggleDoor(float Value);
+    void ControlDoor(float Value);
+
+	UFUNCTION()
+    void ToggleDoor();
 
 	bool Open;
 	bool Close;
