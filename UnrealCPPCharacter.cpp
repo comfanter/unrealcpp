@@ -15,6 +15,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
+#include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -62,6 +63,8 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
+
+	CurrentDoor = NULL;
 }
 
 void AUnrealCPPCharacter::BeginPlay()
@@ -74,6 +77,40 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
+}
+
+//Called every frame
+void AUnrealCPPCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	FHitResult Hit;
+	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
+
+	FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
+	FVector End = ((ForwardVector * 500.f) + Start);
+	FCollisionQueryParams CollisionParams;
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
+
+	if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CollisionParams)) 
+	{
+		if(Hit.bBlockingHit)
+		{
+			if(Hit.GetActor()->GetClass()->IsChildOf(AOpenDoorTimelineCurve::StaticClass())) 
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hitting: %s"), *Hit.GetActor()->GetName()));
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point: %s"), *Hit.ImpactPoint.ToString()));
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Normal Point: %s"), *Hit.ImpactNormal.ToString()));
+
+				CurrentDoor = Cast<AOpenDoorTimelineCurve>(Hit.GetActor());
+			}
+		}
+	}
+	else
+	{
+		CurrentDoor = NULL;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,6 +127,9 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AUnrealCPPCharacter::OnFire);
+
+	// Bind action event
+	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AUnrealCPPCharacter::OnAction);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnrealCPPCharacter::MoveForward);
@@ -172,4 +212,13 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AUnrealCPPCharacter::OnAction()
+{
+	if(CurrentDoor)
+	{
+		CurrentDoor->ToggleDoor();
+	}
+
 }

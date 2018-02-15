@@ -18,8 +18,6 @@
 
 #include "OpenDoorTimelineCurve.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "GameFramework/Character.h"
-#include "Components/InputComponent.h"
 
 // Sets default values
 AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
@@ -28,6 +26,7 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
 	PrimaryActorTick.bCanEverTick = true;
 
     Open = false;
+    ReadyState = true;
 
     MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("My Box Component"));
     MyBoxComponent->InitBoxExtent(FVector(50,50,50));
@@ -52,11 +51,14 @@ void AOpenDoorTimelineCurve::BeginPlay()
     if (OpenCurve)
     {
         FOnTimelineFloat TimelineCallback;
+        FOnTimelineEventStatic onTimelineFinishedCallback;
+
         TimelineCallback.BindUFunction(this, FName("ControlDoor"));
+        onTimelineFinishedCallback.BindUFunction(this, FName{ TEXT("SetState") });
         MyTimeline.AddInterpFloat(OpenCurve, TimelineCallback);
+        MyTimeline.SetTimelineFinishedFunc(onTimelineFinishedCallback);
     }
 
-    ToggleDoor();
 }
 
 // Called every frame
@@ -70,52 +72,32 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
 void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
-    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
-    {
+    // if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
+    // {
+    //     FVector PawnLocation = OtherActor->GetActorLocation();
+    //     FVector Direction = GetActorLocation() - PawnLocation;
+    //     Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
 
-        // APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-        ACharacter* OurPlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
-        // APawn* OurPlayerCharacter = UGameplayStatics::GetPlayerPawn(this, 0);
+    //     if(Direction.X > 0.0f)
+    //     {
+    //         RotateValue = 1.0f;
+    //     }
+    //     else
+    //     {
+    //         RotateValue = -1.0f;
+    //     }
 
-        // Bind action event
-        // OurPlayerCharacter->SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-        // {
-        //     check(PlayerInputComponent);
-
-        //     PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AOpenDoorTimelineCurve::ToggleDoor);
-        // }
-        
-        
-        
-    }
-
-
-    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
-    {
-        FVector PawnLocation = OtherActor->GetActorLocation();
-        FVector Direction = GetActorLocation() - PawnLocation;
-        Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
-
-        if(Direction.X > 0.0f)
-        {
-            RotateValue = 1.0f;
-        }
-        else
-        {
-            RotateValue = -1.0f;
-        }
-
-        DoorRotation = Door->RelativeRotation;
-    }
+    //     DoorRotation = Door->RelativeRotation;
+    // }
 
 }
 
 void AOpenDoorTimelineCurve::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) )  
-    {
-        DoorRotation = Door->RelativeRotation;
-    }
+    // if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) )  
+    // {
+    //     DoorRotation = Door->RelativeRotation;
+    // }
 }
 
 void AOpenDoorTimelineCurve::ControlDoor(float Value)
@@ -150,19 +132,50 @@ void AOpenDoorTimelineCurve::ControlDoor(float Value)
     }
 }
 
+void AOpenDoorTimelineCurve::SetState()
+{
+    ReadyState = true;
+}
+
 void AOpenDoorTimelineCurve::ToggleDoor() 
 {
-    Open = !Open;
+   
+    // alt pawn position
+    // GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()
 
-    if(Open)
+
+    
+
+    if(ReadyState) 
     {
-        Open = false;
-        MyTimeline.PlayFromStart();
-    }
-    else 
-    {
-        Open = false;
-        MyTimeline.Reverse();
+        Open = !Open;
+
+        APawn* OurPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+        FVector PawnLocation = OurPawn->GetActorLocation();
+        FVector Direction = GetActorLocation() - PawnLocation;
+        Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
+
+        DoorRotation = Door->RelativeRotation;
+
+        if(Open)
+        {
+                
+            if(Direction.X > 0.0f)
+            {
+                RotateValue = 1.0f;
+            }
+            else
+            {
+                RotateValue = -1.0f;
+            }
+            ReadyState = false;
+            MyTimeline.PlayFromStart();
+        }
+        else 
+        {
+            ReadyState = false;
+            MyTimeline.Reverse();
+        }
     }
 
 }

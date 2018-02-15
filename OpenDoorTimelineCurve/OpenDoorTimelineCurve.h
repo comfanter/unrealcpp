@@ -55,8 +55,12 @@ public:
 	UFUNCTION()
     void ToggleDoor();
 
+	UFUNCTION()
+    void SetState();
+
 	bool Open;
 	bool Close;
+	bool ReadyState;
 	float RotateValue;
 	float CurveFloatValue;
 	float TimelineValue;

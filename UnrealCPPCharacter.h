@@ -8,6 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "OpenDoorTimelineCurve/OpenDoorTimelineCurve.h"
 #include "UnrealCPPCharacter.generated.h"
 
 class UInputComponent;
@@ -40,6 +41,8 @@ public:
 protected:
 	virtual void BeginPlay();
 
+	virtual void Tick(float DeltaSeconds) override;
+
 public:
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -66,10 +69,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
+	UPROPERTY(EditAnywhere)
+	class AOpenDoorTimelineCurve* CurrentDoor;
+
+
 protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	/** Action Function */
+	void OnAction();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
