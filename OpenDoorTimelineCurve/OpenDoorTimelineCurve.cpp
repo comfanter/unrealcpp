@@ -139,17 +139,13 @@ void AOpenDoorTimelineCurve::SetState()
 
 void AOpenDoorTimelineCurve::ToggleDoor() 
 {
-   
-    // alt pawn position
-    // GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()
-
-
-    
 
     if(ReadyState) 
     {
         Open = !Open;
 
+        // alternative way to get pawn position
+        // GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()
         APawn* OurPawn = UGameplayStatics::GetPlayerPawn(this, 0);
         FVector PawnLocation = OurPawn->GetActorLocation();
         FVector Direction = GetActorLocation() - PawnLocation;
