@@ -9,6 +9,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "OpenDoorTimelineCurve/OpenDoorTimelineCurve.h"
+#include "Blueprint/UserWidget.h"
 #include "UnrealCPPCharacter.generated.h"
 
 class UInputComponent;
@@ -71,6 +72,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class AOpenDoorTimelineCurve* CurrentDoor;
+
+	UPROPERTY(EditAnywhere)
+	class UUserWidget* InfoWidget;
 
 
 protected:

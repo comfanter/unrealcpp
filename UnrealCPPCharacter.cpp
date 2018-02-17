@@ -65,6 +65,7 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
 	CurrentDoor = NULL;
+
 }
 
 void AUnrealCPPCharacter::BeginPlay()
@@ -77,6 +78,8 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
+	InfoWidget->AddToViewport();
+
 }
 
 //Called every frame
@@ -88,7 +91,7 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
 
 	FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
-	FVector End = ((ForwardVector * 500.f) + Start);
+	FVector End = ((ForwardVector * 200.f) + Start);
 	FCollisionQueryParams CollisionParams;
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
@@ -99,16 +102,16 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 		{
 			if(Hit.GetActor()->GetClass()->IsChildOf(AOpenDoorTimelineCurve::StaticClass())) 
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hitting: %s"), *Hit.GetActor()->GetName()));
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Impact Point: %s"), *Hit.ImpactPoint.ToString()));
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Normal Point: %s"), *Hit.ImpactNormal.ToString()));
-
+				InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Visible);
+					
 				CurrentDoor = Cast<AOpenDoorTimelineCurve>(Hit.GetActor());
+				
 			}
 		}
 	}
 	else
 	{
+		InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Hidden);
 		CurrentDoor = NULL;
 	}
 }
