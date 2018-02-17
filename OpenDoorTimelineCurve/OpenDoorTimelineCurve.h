@@ -33,21 +33,7 @@ public:
 	UStaticMeshComponent* Door;
 
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* MyBoxComponent;
-
-	UPROPERTY(EditAnywhere)
-	UCurveFloat *OpenCurve;
-
-	UPROPERTY(EditAnywhere)
-	UCurveFloat *CloseCurve;
-
-	// declare overlap begin function
-	UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	// declare overlap end function
-	UFUNCTION()
-	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UCurveFloat *DoorCurve;
 
 	UFUNCTION()
     void ControlDoor(float Value);
@@ -59,13 +45,11 @@ public:
     void SetState();
 
 	bool Open;
-	bool Close;
 	bool ReadyState;
 	float RotateValue;
 	float CurveFloatValue;
 	float TimelineValue;
 	FRotator DoorRotation;
 	FTimeline MyTimeline;
-	FOnTimelineFloat InterpFunction{};
 
 };

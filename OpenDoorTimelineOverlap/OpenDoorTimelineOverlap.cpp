@@ -110,6 +110,11 @@ void AOpenDoorTimelineOverlap::ControlDoor(float Value)
 
         FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
 
+        if (GEngine) 
+        { 
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Timeline Value: %f"), CurveFloatValue));
+        }
+
         Door->SetRelativeRotation(NewRotation);
     }
     else 
@@ -118,6 +123,11 @@ void AOpenDoorTimelineOverlap::ControlDoor(float Value)
         CurveFloatValue = RotateValue*OpenCurve->GetFloatValue(TimelineValue);
 
         FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
+
+        if (GEngine) 
+        { 
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Timeline Value: %f"), CurveFloatValue));
+        }
 
         Door->SetRelativeRotation(NewRotation);
     }

@@ -28,16 +28,9 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
     Open = false;
     ReadyState = true;
 
-    MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("My Box Component"));
-    MyBoxComponent->InitBoxExtent(FVector(50,50,50));
-    RootComponent = MyBoxComponent;
-
     Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Mesh"));
     Door->SetRelativeLocation(FVector(0.0f, 50.0f, -50.0f));
-    Door->SetupAttachment(RootComponent);
-
-    MyBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AOpenDoorTimelineCurve::OnOverlapBegin);
-    MyBoxComponent->OnComponentEndOverlap.AddDynamic(this, &AOpenDoorTimelineCurve::OnOverlapEnd);
+    RootComponent = Door;
 
 }
 
@@ -48,15 +41,15 @@ void AOpenDoorTimelineCurve::BeginPlay()
 
     RotateValue = 1.0f;
 
-    if (OpenCurve)
+    if (DoorCurve)
     {
         FOnTimelineFloat TimelineCallback;
-        FOnTimelineEventStatic onTimelineFinishedCallback;
+        FOnTimelineEventStatic TimelineFinishedCallback;
 
         TimelineCallback.BindUFunction(this, FName("ControlDoor"));
-        onTimelineFinishedCallback.BindUFunction(this, FName{ TEXT("SetState") });
-        MyTimeline.AddInterpFloat(OpenCurve, TimelineCallback);
-        MyTimeline.SetTimelineFinishedFunc(onTimelineFinishedCallback);
+        TimelineFinishedCallback.BindUFunction(this, FName{ TEXT("SetState") });
+        MyTimeline.AddInterpFloat(DoorCurve, TimelineCallback);
+        MyTimeline.SetTimelineFinishedFunc(TimelineFinishedCallback);
     }
 
 }
@@ -69,64 +62,23 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
     MyTimeline.TickTimeline(DeltaTime);
 }
 
-void AOpenDoorTimelineCurve::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-
-    // if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) ) 
-    // {
-    //     FVector PawnLocation = OtherActor->GetActorLocation();
-    //     FVector Direction = GetActorLocation() - PawnLocation;
-    //     Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
-
-    //     if(Direction.X > 0.0f)
-    //     {
-    //         RotateValue = 1.0f;
-    //     }
-    //     else
-    //     {
-    //         RotateValue = -1.0f;
-    //     }
-
-    //     DoorRotation = Door->RelativeRotation;
-    // }
-
-}
-
-void AOpenDoorTimelineCurve::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-    // if ( (OtherActor != nullptr ) && (OtherActor != this) && ( OtherComp != nullptr ) )  
-    // {
-    //     DoorRotation = Door->RelativeRotation;
-    // }
-}
-
 void AOpenDoorTimelineCurve::ControlDoor(float Value)
 {
     if(Open) 
     {
         TimelineValue = MyTimeline.GetPlaybackPosition();
-        CurveFloatValue = RotateValue*OpenCurve->GetFloatValue(TimelineValue);
+        CurveFloatValue = RotateValue*DoorCurve->GetFloatValue(TimelineValue);
 
         FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
-
-        if (GEngine) 
-        { 
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Curve Float Value: %f"), CurveFloatValue));
-        }
 
         Door->SetRelativeRotation(NewRotation);
     }
     else 
     {
         TimelineValue = MyTimeline.GetPlaybackPosition();
-        CurveFloatValue = RotateValue*OpenCurve->GetFloatValue(TimelineValue);
+        CurveFloatValue = RotateValue*DoorCurve->GetFloatValue(TimelineValue);
 
         FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
-
-        if (GEngine) 
-        { 
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Timeline Value: %f"), CurveFloatValue));
-        }
 
         Door->SetRelativeRotation(NewRotation);
     }
@@ -139,7 +91,6 @@ void AOpenDoorTimelineCurve::SetState()
 
 void AOpenDoorTimelineCurve::ToggleDoor() 
 {
-
     if(ReadyState) 
     {
         Open = !Open;
@@ -164,6 +115,7 @@ void AOpenDoorTimelineCurve::ToggleDoor()
             {
                 RotateValue = -1.0f;
             }
+
             ReadyState = false;
             MyTimeline.PlayFromStart();
         }
