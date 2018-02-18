@@ -33,6 +33,9 @@ public:
 	UStaticMeshComponent* Door;
 
 	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* DoorFrame;
+
+	UPROPERTY(EditAnywhere)
 	UCurveFloat *DoorCurve;
 
 	UFUNCTION()

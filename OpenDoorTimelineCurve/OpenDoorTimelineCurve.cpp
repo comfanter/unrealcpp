@@ -28,9 +28,11 @@ AOpenDoorTimelineCurve::AOpenDoorTimelineCurve()
     Open = false;
     ReadyState = true;
 
+    DoorFrame = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorFrame"));
+    RootComponent = DoorFrame;
+
     Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Mesh"));
-    Door->SetRelativeLocation(FVector(0.0f, 50.0f, -50.0f));
-    RootComponent = Door;
+    Door->SetupAttachment(RootComponent);
 
 }
 
