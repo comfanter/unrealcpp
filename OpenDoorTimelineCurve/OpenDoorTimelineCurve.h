@@ -39,7 +39,7 @@ public:
 	UCurveFloat *DoorCurve;
 
 	UFUNCTION()
-    void ControlDoor(float Value);
+    void ControlDoor();
 
 	UFUNCTION()
     void ToggleDoor();

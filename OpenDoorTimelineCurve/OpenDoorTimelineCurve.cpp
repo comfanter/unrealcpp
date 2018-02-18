@@ -64,26 +64,14 @@ void AOpenDoorTimelineCurve::Tick(float DeltaTime)
     MyTimeline.TickTimeline(DeltaTime);
 }
 
-void AOpenDoorTimelineCurve::ControlDoor(float Value)
+void AOpenDoorTimelineCurve::ControlDoor()
 {
-    if(Open) 
-    {
-        TimelineValue = MyTimeline.GetPlaybackPosition();
-        CurveFloatValue = RotateValue*DoorCurve->GetFloatValue(TimelineValue);
+    TimelineValue = MyTimeline.GetPlaybackPosition();
+    CurveFloatValue = RotateValue*DoorCurve->GetFloatValue(TimelineValue);
 
-        FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
+    FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
 
-        Door->SetRelativeRotation(NewRotation);
-    }
-    else 
-    {
-        TimelineValue = MyTimeline.GetPlaybackPosition();
-        CurveFloatValue = RotateValue*DoorCurve->GetFloatValue(TimelineValue);
-
-        FQuat NewRotation = FQuat(FRotator(0.f, CurveFloatValue, 0.f));
-
-        Door->SetRelativeRotation(NewRotation);
-    }
+    Door->SetRelativeRotation(NewRotation);
 }
 
 void AOpenDoorTimelineCurve::SetState()
