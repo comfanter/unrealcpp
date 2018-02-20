@@ -73,9 +73,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	class AOpenDoorTimelineCurve* CurrentDoor;
 
+	// Reference UMG Asset in the Editor
 	UPROPERTY(EditAnywhere)
-	class UUserWidget* InfoWidget;
+	TSubclassOf<class UUserWidget> HelpWidgetClass;
 
+	class UUserWidget* InfoWidget;
 
 protected:
 	

@@ -78,7 +78,16 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
-	InfoWidget->AddToViewport();
+	if (HelpWidgetClass)
+	{
+		InfoWidget = CreateWidget<UUserWidget>(GetWorld(), HelpWidgetClass);
+ 
+		if (InfoWidget)
+		{
+			InfoWidget->AddToViewport();
+		}
+ 
+	}	
 
 }
 
