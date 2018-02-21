@@ -64,7 +64,7 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
-	CurrentDoor = NULL;
+	// CurrentDoor = NULL;
 
 }
 
@@ -77,17 +77,6 @@ void AUnrealCPPCharacter::BeginPlay()
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
 	Mesh1P->SetHiddenInGame(false, true);
-
-	if (HelpWidgetClass)
-	{
-		InfoWidget = CreateWidget<UUserWidget>(GetWorld(), HelpWidgetClass);
- 
-		if (InfoWidget)
-		{
-			InfoWidget->AddToViewport();
-		}
- 
-	}	
 
 }
 
@@ -107,21 +96,21 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 
 	if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CollisionParams)) 
 	{
-		if(Hit.bBlockingHit)
-		{
-			if(Hit.GetActor()->GetClass()->IsChildOf(AOpenDoorTimelineCurve::StaticClass())) 
-			{
-				InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Visible);
+		// if(Hit.bBlockingHit)
+		// {
+		// 	if(Hit.GetActor()->GetClass()->IsChildOf(AOpenDoorTimelineCurve::StaticClass())) 
+		// 	{
+		// 		InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Visible);
 					
-				CurrentDoor = Cast<AOpenDoorTimelineCurve>(Hit.GetActor());
+		// 		CurrentDoor = Cast<AOpenDoorTimelineCurve>(Hit.GetActor());
 				
-			}
-		}
+		// 	}
+		// }
 	}
 	else
 	{
-		InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Hidden);
-		CurrentDoor = NULL;
+		// InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Hidden);
+		// CurrentDoor = NULL;
 	}
 }
 
@@ -228,9 +217,9 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction()
 {
-	if(CurrentDoor)
-	{
-		CurrentDoor->ToggleDoor();
-	}
+	// if(CurrentDoor)
+	// {
+	// 	CurrentDoor->ToggleDoor();
+	// }
 
 }

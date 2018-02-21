@@ -8,8 +8,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "OpenDoorTimelineCurve/OpenDoorTimelineCurve.h"
-#include "Blueprint/UserWidget.h"
 #include "UnrealCPPCharacter.generated.h"
 
 class UInputComponent;
@@ -70,14 +68,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
-	UPROPERTY(EditAnywhere)
-	class AOpenDoorTimelineCurve* CurrentDoor;
-
-	// Reference UMG Asset in the Editor
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> HelpWidgetClass;
-
-	class UUserWidget* InfoWidget;
+	// UPROPERTY(EditAnywhere)
+	// class AOpenDoorTimelineCurve* CurrentDoor;
 
 protected:
 	
