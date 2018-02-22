@@ -52,7 +52,6 @@ public:
 	float RotateValue;
 	float CurveFloatValue;
 	float TimelineValue;
-	FRotator DoorRotation;
 	FTimeline MyTimeline;
 
 };

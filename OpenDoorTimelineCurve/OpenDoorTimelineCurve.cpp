@@ -92,8 +92,6 @@ void AOpenDoorTimelineCurve::ToggleDoor()
         FVector Direction = GetActorLocation() - PawnLocation;
         Direction = UKismetMathLibrary::LessLess_VectorRotator(Direction, GetActorRotation());
 
-        DoorRotation = Door->RelativeRotation;
-
         if(Open)
         {
                 

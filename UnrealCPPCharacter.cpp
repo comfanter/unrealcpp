@@ -64,7 +64,7 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
-	// CurrentDoor = NULL;
+	CurrentItem = NULL;
 
 }
 
@@ -96,21 +96,15 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 
 	if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CollisionParams)) 
 	{
-		// if(Hit.bBlockingHit)
-		// {
-		// 	if(Hit.GetActor()->GetClass()->IsChildOf(AOpenDoorTimelineCurve::StaticClass())) 
-		// 	{
-		// 		InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Visible);
-					
-		// 		CurrentDoor = Cast<AOpenDoorTimelineCurve>(Hit.GetActor());
-				
-		// 	}
-		// }
+		if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
+		{				
+			CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
+			GLog->Log("THIS IS A PICKUP ITEM");	
+		}
 	}
 	else
 	{
-		// InfoWidget->GetWidgetFromName("helpimage")->SetVisibility(ESlateVisibility::Hidden);
-		// CurrentDoor = NULL;
+		CurrentItem = NULL;
 	}
 }
 

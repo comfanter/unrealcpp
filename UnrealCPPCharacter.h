@@ -8,6 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PickupAndRotateActor/PickupAndRotateActor.h"
 #include "UnrealCPPCharacter.generated.h"
 
 class UInputComponent;
@@ -68,8 +69,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
-	// UPROPERTY(EditAnywhere)
-	// class AOpenDoorTimelineCurve* CurrentDoor;
+	UPROPERTY(EditAnywhere)
+	class APickupAndRotateActor* CurrentItem;
 
 protected:
 	

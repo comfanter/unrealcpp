@@ -10,16 +10,11 @@
 // Sets default values
 APickupAndRotateActor::APickupAndRotateActor()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// set our turn rates for input
-	BaseTurnRate = 45.f;
-	BaseLookUpRate = 45.f;
-
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Mesh"));
-
-	// AutoPossessPlayer = EAutoReceiveInput::Player0;
+	RootComponent = MyMesh;
 
 }
 
@@ -35,7 +30,6 @@ void APickupAndRotateActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
 	FRotator MyRot = GetWorld()->GetFirstPlayerController()->GetControlRotation();
 
 	if (GEngine)
@@ -43,28 +37,12 @@ void APickupAndRotateActor::Tick(float DeltaTime)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("My Rotation: %s"), *MyRot.ToString()));
 	} 
 
+	RotateActor(FQuat(MyRot));
+
 }
 
-// Called to bind functionality to input
-void APickupAndRotateActor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APickupAndRotateActor::RotateActor(FQuat NewRotation)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &APickupAndRotateActor::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &APickupAndRotateActor::LookUpAtRate);
-
+	SetActorRotation(NewRotation);
 }
 
-void APickupAndRotateActor::TurnAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-}
-
-void APickupAndRotateActor::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
