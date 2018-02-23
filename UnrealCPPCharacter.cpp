@@ -31,11 +31,15 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	// FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
@@ -78,12 +82,25 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
+	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	bUseControllerRotationPitch = true;
+	bUseControllerRotationYaw = true;
+	bUseControllerRotationRoll = true;
+
+
 }
 
 //Called every frame
 void AUnrealCPPCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FRotator MyRott = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("My Rotation: %s"), *MyRott.ToString()));
+	} 
 
 	FHitResult Hit;
 	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
@@ -99,11 +116,21 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 		if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
 		{				
 			CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
+			CanRotate = true;
 			GLog->Log("THIS IS A PICKUP ITEM");	
+			FirstPersonCameraComponent->bUsePawnControlRotation = false;
+			bUseControllerRotationPitch = false;
+			bUseControllerRotationYaw = false;
+			bUseControllerRotationRoll = false;
+			OnAction();
 		}
 	}
 	else
 	{
+		FirstPersonCameraComponent->bUsePawnControlRotation = true;
+		bUseControllerRotationPitch = true;
+		bUseControllerRotationYaw = true;
+		bUseControllerRotationRoll = true;
 		CurrentItem = NULL;
 	}
 }
@@ -125,6 +152,7 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	// Bind action event
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AUnrealCPPCharacter::OnAction);
+	PlayerInputComponent->BindAction("Action", IE_Released, this, &AUnrealCPPCharacter::OnActionReleased);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnrealCPPCharacter::MoveForward);
@@ -197,6 +225,26 @@ void AUnrealCPPCharacter::MoveRight(float Value)
 	}
 }
 
+// void AUnrealCPPCharacter::Turn(float Rate)
+// {
+// 	if(!CurrentItem)
+// 	{
+// 		AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+// 	}
+// 	else 
+// 	{
+		
+// 	}
+// }
+
+// void AUnrealCPPCharacter::LookUp(float Rate)
+// {
+// 	if(!CurrentItem)
+// 	{
+// 		AddControllerPitchInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+// 	}
+// }
+
 void AUnrealCPPCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
@@ -211,9 +259,24 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction()
 {
-	// if(CurrentDoor)
-	// {
-	// 	CurrentDoor->ToggleDoor();
-	// }
+	if(CanRotate) 
+	{
+		// while(CanRotate)
+		// {
+			if(CurrentItem)
+			{
+				// FirstPersonCameraComponent->bUsePawnControlRotation = false;
+				CurrentItem->RotateActor();
+			}
+			else 
+			{
+				// FirstPersonCameraComponent->bUsePawnControlRotation = true;
+			}
+		// }
+	}
+}
 
+void AUnrealCPPCharacter::OnActionReleased()
+{
+	CanRotate = false;
 }

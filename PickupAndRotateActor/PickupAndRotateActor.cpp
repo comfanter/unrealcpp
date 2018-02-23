@@ -30,19 +30,21 @@ void APickupAndRotateActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator MyRot = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+	// FRotator MyRot = GetWorld()->GetFirstPlayerController()->GetControlRotation();
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("My Rotation: %s"), *MyRot.ToString()));
-	} 
+	// if (GEngine)
+	// {
+	// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("My Rotation: %s"), *MyRot.ToString()));
+	// } 
 
-	RotateActor(FQuat(MyRot));
+	// RotateActor(FQuat(MyRot));
 
 }
 
-void APickupAndRotateActor::RotateActor(FQuat NewRotation)
+void APickupAndRotateActor::RotateActor()
 {
-	SetActorRotation(NewRotation);
+	FRotator MyRot = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+
+	SetActorRotation(FQuat(MyRot));
 }
 

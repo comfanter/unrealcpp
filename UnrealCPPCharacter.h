@@ -72,6 +72,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	class APickupAndRotateActor* CurrentItem;
 
+	bool CanRotate;
+
 protected:
 	
 	/** Fires a projectile. */
@@ -79,6 +81,7 @@ protected:
 
 	/** Action Function */
 	void OnAction();
+	void OnActionReleased();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -97,6 +100,10 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+
+	void LookUp(float Rate);
+
+	void Turn(float Rate);
 	
 protected:
 	// APawn interface

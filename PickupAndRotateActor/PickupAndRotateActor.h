@@ -31,6 +31,6 @@ public:
 	UStaticMeshComponent* MyMesh;
 
 	UFUNCTION()
-	void RotateActor(FQuat NewRotation);
+	void RotateActor();
 	
 };
