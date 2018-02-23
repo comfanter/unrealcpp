@@ -116,13 +116,19 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 		if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
 		{				
 			CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
-			CanRotate = true;
 			GLog->Log("THIS IS A PICKUP ITEM");	
 			FirstPersonCameraComponent->bUsePawnControlRotation = false;
 			bUseControllerRotationPitch = false;
 			bUseControllerRotationYaw = false;
 			bUseControllerRotationRoll = false;
-			OnAction();
+			if(CanRotate) 
+			{
+				if(CurrentItem)
+				{
+					// FirstPersonCameraComponent->bUsePawnControlRotation = false;
+					CurrentItem->RotateActor();
+				}
+			}
 		}
 	}
 	else
@@ -259,21 +265,20 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction()
 {
-	if(CanRotate) 
-	{
+	CanRotate = true;
+
 		// while(CanRotate)
 		// {
-			if(CurrentItem)
-			{
-				// FirstPersonCameraComponent->bUsePawnControlRotation = false;
-				CurrentItem->RotateActor();
-			}
-			else 
-			{
-				// FirstPersonCameraComponent->bUsePawnControlRotation = true;
-			}
+			// if(CurrentItem)
+			// {
+			// 	// FirstPersonCameraComponent->bUsePawnControlRotation = false;
+			// 	CurrentItem->RotateActor();
+			// }
+			// else 
+			// {
+			// 	// FirstPersonCameraComponent->bUsePawnControlRotation = true;
+			// }
 		// }
-	}
 }
 
 void AUnrealCPPCharacter::OnActionReleased()
