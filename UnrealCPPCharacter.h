@@ -86,6 +86,10 @@ protected:
 	void OnAction();
 	void OnActionReleased();
 
+	/** Zoom Function */
+	void OnZoom();
+	void OnZoomReleased();
+
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
 

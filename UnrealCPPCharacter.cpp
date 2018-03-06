@@ -148,6 +148,10 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AUnrealCPPCharacter::OnAction);
 	PlayerInputComponent->BindAction("Action", IE_Released, this, &AUnrealCPPCharacter::OnActionReleased);
 
+	// Bind zoom event
+	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AUnrealCPPCharacter::OnZoom);
+	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &AUnrealCPPCharacter::OnZoomReleased);
+
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnrealCPPCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AUnrealCPPCharacter::MoveRight);
@@ -233,10 +237,20 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction()
 {
-	CanRotate = true;
 
+}
+
+void AUnrealCPPCharacter::OnActionReleased()
+{
+
+}
+
+void AUnrealCPPCharacter::OnZoom()
+{
 	if(CurrentItem)
 	{
+		LastRotation = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+		CanRotate = true;
 		FirstPersonCameraComponent->bUsePawnControlRotation = false;
 		bUseControllerRotationPitch = false;
 		bUseControllerRotationYaw = false;
@@ -248,10 +262,12 @@ void AUnrealCPPCharacter::OnAction()
 	}
 }
 
-void AUnrealCPPCharacter::OnActionReleased()
+void AUnrealCPPCharacter::OnZoomReleased()
 {
+	
 	FirstPersonCameraComponent->FieldOfView = 90.0f;
 	CanRotate = false;
+	GetWorld()->GetFirstPlayerController()->SetControlRotation(LastRotation);
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationYaw = true;
