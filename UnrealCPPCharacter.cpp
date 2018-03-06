@@ -117,26 +117,14 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 		{				
 			CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
 			GLog->Log("THIS IS A PICKUP ITEM");	
-			FirstPersonCameraComponent->bUsePawnControlRotation = false;
-			bUseControllerRotationPitch = false;
-			bUseControllerRotationYaw = false;
-			bUseControllerRotationRoll = false;
-			if(CanRotate) 
-			{
-				if(CurrentItem)
-				{
-					// FirstPersonCameraComponent->bUsePawnControlRotation = false;
-					CurrentItem->RotateActor();
-				}
+
+			if(CanRotate) {
+				CurrentItem->RotateActor();
 			}
 		}
 	}
 	else
 	{
-		FirstPersonCameraComponent->bUsePawnControlRotation = true;
-		bUseControllerRotationPitch = true;
-		bUseControllerRotationYaw = true;
-		bUseControllerRotationRoll = true;
 		CurrentItem = NULL;
 	}
 }
@@ -231,26 +219,6 @@ void AUnrealCPPCharacter::MoveRight(float Value)
 	}
 }
 
-// void AUnrealCPPCharacter::Turn(float Rate)
-// {
-// 	if(!CurrentItem)
-// 	{
-// 		AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-// 	}
-// 	else 
-// 	{
-		
-// 	}
-// }
-
-// void AUnrealCPPCharacter::LookUp(float Rate)
-// {
-// 	if(!CurrentItem)
-// 	{
-// 		AddControllerPitchInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-// 	}
-// }
-
 void AUnrealCPPCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
@@ -267,21 +235,25 @@ void AUnrealCPPCharacter::OnAction()
 {
 	CanRotate = true;
 
-		// while(CanRotate)
-		// {
-			// if(CurrentItem)
-			// {
-			// 	// FirstPersonCameraComponent->bUsePawnControlRotation = false;
-			// 	CurrentItem->RotateActor();
-			// }
-			// else 
-			// {
-			// 	// FirstPersonCameraComponent->bUsePawnControlRotation = true;
-			// }
-		// }
+	if(CurrentItem)
+	{
+		FirstPersonCameraComponent->bUsePawnControlRotation = false;
+		bUseControllerRotationPitch = false;
+		bUseControllerRotationYaw = false;
+		bUseControllerRotationRoll = false;
+	}
+	else 
+	{
+		FirstPersonCameraComponent->FieldOfView = 45.0f;
+	}
 }
 
 void AUnrealCPPCharacter::OnActionReleased()
 {
+	FirstPersonCameraComponent->FieldOfView = 90.0f;
 	CanRotate = false;
+	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	bUseControllerRotationPitch = true;
+	bUseControllerRotationYaw = true;
+	bUseControllerRotationRoll = true;
 }

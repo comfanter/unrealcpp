@@ -73,6 +73,9 @@ public:
 	class APickupAndRotateActor* CurrentItem;
 
 	bool CanRotate;
+	bool isHolding;
+	FRotator LastRotation;
+
 
 protected:
 	
@@ -100,10 +103,6 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
-
-	void LookUp(float Rate);
-
-	void Turn(float Rate);
 	
 protected:
 	// APawn interface
