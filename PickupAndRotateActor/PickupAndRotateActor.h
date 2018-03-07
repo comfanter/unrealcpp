@@ -32,5 +32,10 @@ public:
 
 	UFUNCTION()
 	void RotateActor();
+
+	UFUNCTION()
+	void Pickup();
+
+	bool isHolding;
 	
 };

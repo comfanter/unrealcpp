@@ -16,6 +16,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/KismetMathLibrary.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -61,6 +62,11 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	FP_MuzzleLocation->SetupAttachment(FP_Gun);
 	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
+
+	HoldingComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HoldingComponent"));
+	HoldingComponent->RelativeLocation = FVector(-20.0f, -12.0f, -50.0f);
+	HoldingComponent->RelativeRotation = FRotator(0.0f, 10.0f, 20.0f);
+	HoldingComponent->SetupAttachment(FirstPersonCameraComponent);
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
@@ -126,6 +132,14 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 	else
 	{
 		CurrentItem = NULL;
+	}
+
+	if(isZoom)
+	{
+		FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 45.0f, 0.1f));
+	} else 
+	{
+		FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 90.0f, 0.1f));
 	}
 }
 
@@ -237,7 +251,11 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction()
 {
-
+	if(CurrentItem && !isHolding)
+	{
+		isHolding = true;
+		CurrentItem->Pickup();
+	} 
 }
 
 void AUnrealCPPCharacter::OnActionReleased()
@@ -258,18 +276,23 @@ void AUnrealCPPCharacter::OnZoom()
 	}
 	else 
 	{
-		FirstPersonCameraComponent->FieldOfView = 45.0f;
+		isZoom = true;
 	}
 }
 
 void AUnrealCPPCharacter::OnZoomReleased()
 {
-	
-	FirstPersonCameraComponent->FieldOfView = 90.0f;
-	CanRotate = false;
-	GetWorld()->GetFirstPlayerController()->SetControlRotation(LastRotation);
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
-	bUseControllerRotationPitch = true;
-	bUseControllerRotationYaw = true;
-	bUseControllerRotationRoll = true;
+	if(isZoom) 
+	{
+		isZoom = false;
+	}
+	else 
+	{
+		CanRotate = false;
+		GetWorld()->GetFirstPlayerController()->SetControlRotation(LastRotation);
+		FirstPersonCameraComponent->bUsePawnControlRotation = true;
+		bUseControllerRotationPitch = true;
+		bUseControllerRotationYaw = true;
+		bUseControllerRotationRoll = true;
+	}
 }

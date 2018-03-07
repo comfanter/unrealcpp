@@ -34,6 +34,11 @@ class AUnrealCPPCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
 
+	/** First person camera */
+	UPROPERTY(EditAnywhere)
+	class USceneComponent* HoldingComponent;
+
+	
 
 public:
 	AUnrealCPPCharacter();
@@ -74,6 +79,7 @@ public:
 
 	bool CanRotate;
 	bool isHolding;
+	bool isZoom;
 	FRotator LastRotation;
 
 
