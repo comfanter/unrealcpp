@@ -116,21 +116,24 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
 
-	if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CollisionParams)) 
+	if(!isHolding)
 	{
-		if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
-		{				
-			CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
-			GLog->Log("THIS IS A PICKUP ITEM");	
+		if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CollisionParams)) 
+		{
+			if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
+			{				
+				CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
+				GLog->Log("THIS IS A PICKUP ITEM");	
 
-			if(CanRotate) {
-				CurrentItem->RotateActor();
+				if(CanRotate) {
+					CurrentItem->RotateActor();
+				}
 			}
 		}
-	}
-	else
-	{
-		CurrentItem = NULL;
+		else
+		{
+			CurrentItem = NULL;
+		}
 	}
 
 	if(isZoom)
@@ -255,11 +258,17 @@ void AUnrealCPPCharacter::OnAction()
 		isHolding = true;
 		CurrentItem->Pickup();
 	} 
+	else if (CurrentItem && isHolding)
+	{
+		isHolding = false;
+		CurrentItem->Pickup();
+		CurrentItem = NULL;
+	}
 }
 
 void AUnrealCPPCharacter::OnActionReleased()
 {
-
+	// CurrentItem->Pickup();
 }
 
 void AUnrealCPPCharacter::OnZoom()

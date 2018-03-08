@@ -16,6 +16,9 @@ APickupAndRotateActor::APickupAndRotateActor()
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Mesh"));
 	RootComponent = MyMesh;
 
+	isHolding = false;
+	isGravity = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -62,6 +65,8 @@ void APickupAndRotateActor::RotateActor()
 
 void APickupAndRotateActor::Pickup()
 {
-	isHolding = true;	
+	isHolding = !isHolding;	
+	isGravity = !isGravity;
+	MyMesh->SetEnableGravity(isGravity);
 }
 

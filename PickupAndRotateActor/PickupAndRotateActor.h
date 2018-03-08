@@ -40,6 +40,6 @@ public:
 	void Pickup();
 
 	bool isHolding;
-
+	bool isGravity;
 	
 };
