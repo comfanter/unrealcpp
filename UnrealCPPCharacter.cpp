@@ -64,9 +64,8 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
 
 	HoldingComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HoldingComponent"));
-	HoldingComponent->RelativeLocation = FVector(-20.0f, -12.0f, -50.0f);
-	HoldingComponent->RelativeRotation = FRotator(0.0f, 10.0f, 20.0f);
-	HoldingComponent->SetupAttachment(FirstPersonCameraComponent);
+	HoldingComponent->RelativeLocation.X = 50.0f;
+	HoldingComponent->SetupAttachment(FP_MuzzleLocation);
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);

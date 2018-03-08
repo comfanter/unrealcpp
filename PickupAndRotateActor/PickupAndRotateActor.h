@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* MyMesh;
 
+	UPROPERTY(EditAnywhere)
+	USceneComponent* HoldingComp;
+
 	UFUNCTION()
 	void RotateActor();
 
@@ -37,5 +40,6 @@ public:
 	void Pickup();
 
 	bool isHolding;
+
 	
 };

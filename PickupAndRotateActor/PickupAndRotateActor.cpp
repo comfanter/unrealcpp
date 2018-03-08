@@ -22,7 +22,23 @@ APickupAndRotateActor::APickupAndRotateActor()
 void APickupAndRotateActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	ACharacter* OurPlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+
+	TArray<USceneComponent*> Components;
+ 
+	OurPlayerCharacter->GetComponents(Components);
+
+	if(Components.Num() > 0)
+	{
+		for (auto& Comp : Components)
+		{
+			if(Comp->GetName() == "HoldingComponent")
+			{
+				HoldingComp = Cast<USceneComponent>(Comp);
+			}
+		}
+	}
 }
 
 // Called every frame
@@ -30,38 +46,9 @@ void APickupAndRotateActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// FRotator MyRot = GetWorld()->GetFirstPlayerController()->GetControlRotation();
-
-	// if (GEngine)
-	// {
-	// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("My Rotation: %s"), *MyRot.ToString()));
-	// } 
-
-	// RotateActor(FQuat(MyRot));
-
-	if(isHolding)
+	if(isHolding && HoldingComp)
 	{
-		FVector PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-		FRotator PlayerRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
-		ACharacter* OurPlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
-		
-		TArray<USceneComponent*> Comps;
- 
-		OurPlayerCharacter->GetComponents(Comps);
-		if(Comps.Num() > 0)
-		{
-			// USceneComponent* FoundComp = Comps[6]; good because it attaches it to the arms with the animations
-			USceneComponent* FoundComp = Comps[7];
-			//do stuff with FoundComp
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Comp Loc: %s"), *FoundComp->GetComponentLocation().ToString()));
-			SetActorLocationAndRotation(FoundComp->GetComponentLocation(), FoundComp->GetComponentRotation());
-
-
-		}
-
-		// PlayerLocation.X += 20.0f;
-		// PlayerLocation.Y -= 30.f;
-		// PlayerLocation.Z += 30.f;
+		SetActorLocationAndRotation(HoldingComp->GetComponentLocation(), HoldingComp->GetComponentRotation());
 	}
 
 }
