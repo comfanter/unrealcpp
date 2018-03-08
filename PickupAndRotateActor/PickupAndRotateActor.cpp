@@ -68,5 +68,7 @@ void APickupAndRotateActor::Pickup()
 	isHolding = !isHolding;	
 	isGravity = !isGravity;
 	MyMesh->SetEnableGravity(isGravity);
+	MyMesh->SetSimulatePhysics(isHolding ? false : true);
+	MyMesh->SetCollisionEnabled(isHolding ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
 }
 
