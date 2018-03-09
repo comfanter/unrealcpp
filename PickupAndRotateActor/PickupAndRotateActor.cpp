@@ -6,6 +6,7 @@
 
 #include "PickupAndRotateActor.h"
 #include "GameFramework/Character.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 APickupAndRotateActor::APickupAndRotateActor()
@@ -70,5 +71,12 @@ void APickupAndRotateActor::Pickup()
 	MyMesh->SetEnableGravity(isGravity);
 	MyMesh->SetSimulatePhysics(isHolding ? false : true);
 	MyMesh->SetCollisionEnabled(isHolding ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
+	if(!isHolding) 
+	{
+		ACharacter* OurPlayerController = UGameplayStatics::GetPlayerCharacter(this, 0);
+		UCameraComponent* PlayerCamera = OurPlayerController->FindComponentByClass<UCameraComponent>();
+		FVector ForwardVector = PlayerCamera->GetForwardVector();
+		MyMesh->AddForce(ForwardVector*100000*MyMesh->GetMass());
+	}
 }
 
