@@ -79,7 +79,9 @@ public:
 
 	bool CanRotate;
 	bool isHolding;
-	bool isZoom;
+	bool isInspect;
+	bool canMove;
+	FVector HoldingComp;
 	FRotator LastRotation;
 
 
@@ -92,9 +94,9 @@ protected:
 	void OnAction();
 	void OnActionReleased();
 
-	/** Zoom Function */
-	void OnZoom();
-	void OnZoomReleased();
+	/** Inspect Function */
+	void OnInspect();
+	void OnInspectReleased();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);

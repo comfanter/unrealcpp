@@ -32,10 +32,6 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
-
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
@@ -74,6 +70,8 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
 	CurrentItem = NULL;
+	isInspect = false;
+	canMove = true;
 
 }
 
@@ -92,6 +90,8 @@ void AUnrealCPPCharacter::BeginPlay()
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = true;
 
+	FVector HoldingComp = HoldingComponent->GetComponentLocation();
+
 
 }
 
@@ -100,7 +100,7 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator MyRott = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+	FRotator MyRott = GetControlRotation();
 
 	if (GEngine)
 	{
@@ -123,11 +123,7 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 			if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
 			{				
 				CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
-				GLog->Log("THIS IS A PICKUP ITEM");	
-
-				if(CanRotate) {
-					CurrentItem->RotateActor();
-				}
+				// GLog->Log("THIS IS A PICKUP ITEM");	
 			}
 		}
 		else
@@ -136,12 +132,34 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	if(isZoom)
+	if(isInspect)
 	{
-		FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 45.0f, 0.1f));
-	} else 
+		if(!isHolding)
+		{
+			FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 45.0f, 0.1f));
+		}
+
+		if(isHolding)
+		{
+			// GLog->Log("Move item");
+			HoldingComponent->SetRelativeLocation(FVector(0.0f, 50.0f, 50.0f));
+			CurrentItem->RotateActor();
+		}
+
+	} 
+	else 
 	{
 		FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 90.0f, 0.1f));
+
+		if(isHolding)
+		{
+			// GLog->Log("move it back");
+			HoldingComponent->SetRelativeLocation(FVector(50.0f, 0.0f, 0.f));
+			// HoldingComponent->SetRelativeLocation(HoldingComp);
+			// HoldingComponent->RelativeLocation.X = 50.0f;
+			// HoldingComponent->RelativeLocation.X = 0.0f;
+			// HoldingComponent->RelativeLocation.Z = 0.0f;
+		}
 	}
 }
 
@@ -164,9 +182,9 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AUnrealCPPCharacter::OnAction);
 	PlayerInputComponent->BindAction("Action", IE_Released, this, &AUnrealCPPCharacter::OnActionReleased);
 
-	// Bind zoom event
-	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AUnrealCPPCharacter::OnZoom);
-	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &AUnrealCPPCharacter::OnZoomReleased);
+	// Bind Inspect event
+	PlayerInputComponent->BindAction("Inspect", IE_Pressed, this, &AUnrealCPPCharacter::OnInspect);
+	PlayerInputComponent->BindAction("Inspect", IE_Released, this, &AUnrealCPPCharacter::OnInspectReleased);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnrealCPPCharacter::MoveForward);
@@ -223,7 +241,7 @@ void AUnrealCPPCharacter::OnFire()
 
 void AUnrealCPPCharacter::MoveForward(float Value)
 {
-	if (Value != 0.0f)
+	if (Value != 0.0f && canMove)
 	{
 		// add movement in that direction
 		AddMovementInput(GetActorForwardVector(), Value);
@@ -232,7 +250,7 @@ void AUnrealCPPCharacter::MoveForward(float Value)
 
 void AUnrealCPPCharacter::MoveRight(float Value)
 {
-	if (Value != 0.0f)
+	if (Value != 0.0f && canMove)
 	{
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
@@ -271,11 +289,13 @@ void AUnrealCPPCharacter::OnActionReleased()
 	// CurrentItem->Pickup();
 }
 
-void AUnrealCPPCharacter::OnZoom()
+void AUnrealCPPCharacter::OnInspect()
 {
 	if(CurrentItem)
 	{
-		LastRotation = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+		canMove = false;
+		isInspect = true;
+		LastRotation = GetControlRotation();
 		CanRotate = true;
 		FirstPersonCameraComponent->bUsePawnControlRotation = false;
 		bUseControllerRotationPitch = false;
@@ -284,23 +304,25 @@ void AUnrealCPPCharacter::OnZoom()
 	}
 	else 
 	{
-		isZoom = true;
+		isInspect = true;
 	}
 }
 
-void AUnrealCPPCharacter::OnZoomReleased()
+void AUnrealCPPCharacter::OnInspectReleased()
 {
-	if(isZoom) 
+	if (isInspect && isHolding) 
 	{
-		isZoom = false;
-	}
-	else 
-	{
+		canMove = true;
+		isInspect = false;
 		CanRotate = false;
-		GetWorld()->GetFirstPlayerController()->SetControlRotation(LastRotation);
+		GetController()->SetControlRotation(LastRotation);
 		FirstPersonCameraComponent->bUsePawnControlRotation = true;
 		bUseControllerRotationPitch = true;
 		bUseControllerRotationYaw = true;
 		bUseControllerRotationRoll = true;
+	}
+	else 
+	{
+		isInspect = false;
 	}
 }
