@@ -91,6 +91,8 @@ void AUnrealCPPCharacter::BeginPlay()
 	bUseControllerRotationRoll = true;
 
 	FVector HoldingComp = HoldingComponent->GetComponentLocation();
+	ControlMax = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax;
+	ControlMin = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin;
 
 
 }
@@ -143,6 +145,8 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 		{
 			// GLog->Log("Move item");
 			HoldingComponent->SetRelativeLocation(FVector(0.0f, 50.0f, 50.0f));
+			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = 359.0f;
+			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = 0.0f;
 			CurrentItem->RotateActor();
 		}
 
@@ -316,6 +320,8 @@ void AUnrealCPPCharacter::OnInspectReleased()
 		isInspect = false;
 		CanRotate = false;
 		GetController()->SetControlRotation(LastRotation);
+		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = ControlMax;
+		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = ControlMin;
 		FirstPersonCameraComponent->bUsePawnControlRotation = true;
 		bUseControllerRotationPitch = true;
 		bUseControllerRotationYaw = true;

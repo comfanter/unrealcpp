@@ -83,6 +83,8 @@ public:
 	bool canMove;
 	FVector HoldingComp;
 	FRotator LastRotation;
+	float ControlMax;
+	float ControlMin;
 
 
 protected:
