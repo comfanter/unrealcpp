@@ -6,7 +6,6 @@
 
 #include "PickupAndRotateActor.h"
 #include "GameFramework/Character.h"
-#include "Camera/CameraComponent.h"
 
 // Sets default values
 APickupAndRotateActor::APickupAndRotateActor()
@@ -17,8 +16,8 @@ APickupAndRotateActor::APickupAndRotateActor()
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Mesh"));
 	RootComponent = MyMesh;
 
-	isHolding = false;
-	isGravity = true;
+	bHolding = false;
+	bGravity = true;
 
 }
 
@@ -27,11 +26,12 @@ void APickupAndRotateActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ACharacter* OurPlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+	MyCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+	PlayerCamera = MyCharacter->FindComponentByClass<UCameraComponent>();
 
 	TArray<USceneComponent*> Components;
  
-	OurPlayerCharacter->GetComponents(Components);
+	MyCharacter->GetComponents(Components);
 
 	if(Components.Num() > 0)
 	{
@@ -43,6 +43,7 @@ void APickupAndRotateActor::BeginPlay()
 			}
 		}
 	}
+
 }
 
 // Called every frame
@@ -50,7 +51,7 @@ void APickupAndRotateActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(isHolding && HoldingComp)
+	if(bHolding && HoldingComp)
 	{
 		SetActorLocationAndRotation(HoldingComp->GetComponentLocation(), HoldingComp->GetComponentRotation());
 	}
@@ -59,24 +60,23 @@ void APickupAndRotateActor::Tick(float DeltaTime)
 
 void APickupAndRotateActor::RotateActor()
 {
-	FRotator MyRot = GetWorld()->GetFirstPlayerController()->GetControlRotation();
-
-	SetActorRotation(FQuat(MyRot));
+	ControlRotation = GetWorld()->GetFirstPlayerController()->GetControlRotation();
+	SetActorRotation(FQuat(ControlRotation));
 }
 
 void APickupAndRotateActor::Pickup()
 {
-	isHolding = !isHolding;	
-	isGravity = !isGravity;
-	MyMesh->SetEnableGravity(isGravity);
-	MyMesh->SetSimulatePhysics(isHolding ? false : true);
-	MyMesh->SetCollisionEnabled(isHolding ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
-	if(!isHolding) 
+	bHolding = !bHolding;	
+	bGravity = !bGravity;
+	MyMesh->SetEnableGravity(bGravity);
+	MyMesh->SetSimulatePhysics(bHolding ? false : true);
+	MyMesh->SetCollisionEnabled(bHolding ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
+
+	if(!bHolding) 
 	{
-		ACharacter* OurPlayerController = UGameplayStatics::GetPlayerCharacter(this, 0);
-		UCameraComponent* PlayerCamera = OurPlayerController->FindComponentByClass<UCameraComponent>();
-		FVector ForwardVector = PlayerCamera->GetForwardVector();
+		ForwardVector = PlayerCamera->GetForwardVector();
 		MyMesh->AddForce(ForwardVector*100000*MyMesh->GetMass());
 	}
+
 }
 

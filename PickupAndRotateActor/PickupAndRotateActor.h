@@ -8,6 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Camera/CameraComponent.h"
 #include "PickupAndRotateActor.generated.h"
 
 UCLASS()
@@ -39,7 +40,12 @@ public:
 	UFUNCTION()
 	void Pickup();
 
-	bool isHolding;
-	bool isGravity;
+	bool bHolding;
+	bool bGravity;
+
+	FRotator ControlRotation;
+	ACharacter* MyCharacter;
+	UCameraComponent* PlayerCamera;
+	FVector ForwardVector;
 	
 };

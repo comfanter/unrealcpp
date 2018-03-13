@@ -77,14 +77,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	class APickupAndRotateActor* CurrentItem;
 
-	bool CanRotate;
-	bool isHolding;
-	bool isInspect;
-	bool canMove;
-	FVector HoldingComp;
-	FRotator LastRotation;
+	bool bCanMove;
+	bool bHoldingItem;
+	bool bInspecting;
+
 	float ControlMax;
 	float ControlMin;
+
+	FVector HoldingComp;
+	FRotator LastRotation;
 
 
 protected:
@@ -94,7 +95,6 @@ protected:
 
 	/** Action Function */
 	void OnAction();
-	void OnActionReleased();
 
 	/** Inspect Function */
 	void OnInspect();
@@ -117,6 +117,12 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+
+	// toggle player movement
+	void ToggleMovement();
+
+	// toggle holding item pickup
+	void ToggleItemPickup();
 	
 protected:
 	// APawn interface
