@@ -87,6 +87,15 @@ public:
 	FVector HoldingComp;
 	FRotator LastRotation;
 
+	FVector Start;
+	FVector ForwardVector;
+	FVector End;
+
+	FHitResult Hit;
+	
+	FComponentQueryParams DefaultComponentQueryParams;
+	FCollisionResponseParams DefaultResponseParam;
+
 
 protected:
 	

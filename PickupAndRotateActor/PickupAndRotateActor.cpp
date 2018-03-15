@@ -4,6 +4,11 @@
 // https://severallevels.io
 // https://harrisonmcguire.com
 
+// Helpful Links
+// http://api.unrealengine.com/INT/API/Runtime/Engine/Engine/UWorld/LineTraceSingleByChannel/index.html
+// http://api.unrealengine.com/INT/API/Runtime/Engine/FCollisionQueryParams/index.html
+// http://api.unrealengine.com/INT/API/Runtime/Engine/GameFramework/APawn/index.html
+
 #include "PickupAndRotateActor.h"
 #include "GameFramework/Character.h"
 

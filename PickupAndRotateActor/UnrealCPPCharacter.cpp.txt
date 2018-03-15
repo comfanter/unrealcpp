@@ -1,5 +1,5 @@
 // Harrison McGuire 
-// UE4 Version 4.18.3
+// UE4 Version 4.19
 // https://github.com/Harrison1/unrealcpp 
 // https://severallevels.io
 // https://harrisonmcguire.com
@@ -36,7 +36,7 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
-	// FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
@@ -85,11 +85,6 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
-	bUseControllerRotationPitch = true;
-	bUseControllerRotationYaw = true;
-	bUseControllerRotationRoll = true;
-
 	FVector HoldingComp = HoldingComponent->GetComponentLocation();
 	ControlMax = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax;
 	ControlMin = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin;
@@ -101,20 +96,15 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator MyRott = GetControlRotation();
-
-	FHitResult Hit;
-	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
-
-	FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
-	FVector End = ((ForwardVector * 200.f) + Start);
-	FCollisionQueryParams CollisionParams;
+	Start = FirstPersonCameraComponent->GetComponentLocation();
+	ForwardVector = FirstPersonCameraComponent->GetForwardVector();
+	End = ((ForwardVector * 200.f) + Start);
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
 
 	if(!bHoldingItem)
 	{
-		if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, CollisionParams)) 
+		if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, DefaultComponentQueryParams, DefaultResponseParam)) 
 		{
 			if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
 			{				
@@ -275,7 +265,7 @@ void AUnrealCPPCharacter::OnAction()
 
 void AUnrealCPPCharacter::OnInspect()
 {
-	if(CurrentItem)
+	if(bHoldingItem)
 	{
 		LastRotation = GetControlRotation();
 		ToggleMovement();
@@ -306,9 +296,7 @@ void AUnrealCPPCharacter::ToggleMovement()
 	bCanMove = !bCanMove;
 	bInspecting = !bInspecting;
 	FirstPersonCameraComponent->bUsePawnControlRotation = !FirstPersonCameraComponent->bUsePawnControlRotation;
-	bUseControllerRotationPitch = !bUseControllerRotationPitch;
 	bUseControllerRotationYaw = !bUseControllerRotationYaw;
-	bUseControllerRotationRoll = !bUseControllerRotationRoll;
 }
 
 void AUnrealCPPCharacter::ToggleItemPickup()
