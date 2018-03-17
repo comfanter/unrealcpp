@@ -81,8 +81,8 @@ public:
 	bool bHoldingItem;
 	bool bInspecting;
 
-	float ControlMax;
-	float ControlMin;
+	float PitchMax;
+	float PitchMin;
 
 	FVector HoldingComp;
 	FRotator LastRotation;

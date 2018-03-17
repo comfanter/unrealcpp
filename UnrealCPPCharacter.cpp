@@ -84,9 +84,8 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
-	FVector HoldingComp = HoldingComponent->GetComponentLocation();
-	ControlMax = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax;
-	ControlMin = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin;
+	PitchMax = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax;
+	PitchMin = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin;
 
 }
 
@@ -277,8 +276,8 @@ void AUnrealCPPCharacter::OnInspectReleased()
 	if (bInspecting && bHoldingItem) 
 	{
 		GetController()->SetControlRotation(LastRotation);
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = ControlMax;
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = ControlMin;
+		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = PitchMax;
+		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = PitchMin;
 		ToggleMovement();
 	}
 	else 
