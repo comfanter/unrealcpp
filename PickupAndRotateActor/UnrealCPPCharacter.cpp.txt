@@ -296,11 +296,14 @@ void AUnrealCPPCharacter::ToggleMovement()
 
 void AUnrealCPPCharacter::ToggleItemPickup()
 {
-	bHoldingItem = !bHoldingItem;
-	CurrentItem->Pickup();
-
-	if(!bHoldingItem)
+	if(CurrentItem)
 	{
-		CurrentItem = NULL;
+		bHoldingItem = !bHoldingItem;
+		CurrentItem->Pickup();
+
+		if(!bHoldingItem)
+		{
+			CurrentItem = NULL;
+		}
 	}
 }
