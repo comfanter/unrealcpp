@@ -16,7 +16,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "DrawDebugHelpers.h"
-#include "Kismet/KismetMathLibrary.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -119,16 +118,17 @@ void AUnrealCPPCharacter::Tick(float DeltaTime)
 
 	if(bInspecting)
 	{
-		if(!bHoldingItem)
+		if(bHoldingItem)
 		{
-			FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 45.0f, 0.1f));
-		}
-		else
-		{
+			FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 90.0f, 0.1f));
 			HoldingComponent->SetRelativeLocation(FVector(0.0f, 50.0f, 50.0f));
 			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = 179.9000002f;
 			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = -179.9000002f;
 			CurrentItem->RotateActor();
+		}
+		else
+		{
+			FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 45.0f, 0.1f));
 		}
 	}
 	else 
@@ -249,11 +249,7 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 
 void AUnrealCPPCharacter::OnAction()
 {
-	if(CurrentItem && !bHoldingItem)
-	{
-		ToggleItemPickup();
-	} 
-	else if (CurrentItem && bHoldingItem)
+	if(CurrentItem && !bInspecting)
 	{
 		ToggleItemPickup();
 	}
