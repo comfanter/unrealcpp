@@ -34,7 +34,7 @@ class AUnrealCPPCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
 
-	/** First person camera */
+	/** Holding Component */
 	UPROPERTY(EditAnywhere)
 	class USceneComponent* HoldingComponent;
 
