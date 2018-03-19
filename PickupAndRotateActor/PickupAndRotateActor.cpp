@@ -19,6 +19,7 @@ APickupAndRotateActor::APickupAndRotateActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My Mesh"));
+	MyMesh->SetSimulatePhysics(true);
 	RootComponent = MyMesh;
 
 	bHolding = false;
