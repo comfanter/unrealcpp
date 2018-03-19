@@ -252,10 +252,6 @@ void AUnrealCPPCharacter::OnAction()
 	{
 		ToggleItemPickup();
 	}
-	else 
-	{
-		return;
-	}
 }
 
 void AUnrealCPPCharacter::OnInspect()
