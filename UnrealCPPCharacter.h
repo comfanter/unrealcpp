@@ -8,7 +8,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "PickupAndRotateActor/PickupAndRotateActor.h"
 #include "UnrealCPPCharacter.generated.h"
 
 class UInputComponent;
@@ -33,11 +32,6 @@ class AUnrealCPPCharacter : public ACharacter
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
-
-	/** Holding Component */
-	UPROPERTY(EditAnywhere)
-	class USceneComponent* HoldingComponent;
-
 	
 
 public:
@@ -45,8 +39,6 @@ public:
 
 protected:
 	virtual void BeginPlay();
-
-	virtual void Tick(float DeltaSeconds) override;
 
 public:
 
@@ -74,40 +66,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
-	UPROPERTY(EditAnywhere)
-	class APickupAndRotateActor* CurrentItem;
-
-	bool bCanMove;
-	bool bHoldingItem;
-	bool bInspecting;
-
-	float PitchMax;
-	float PitchMin;
-
-	FVector HoldingComp;
-	FRotator LastRotation;
-
-	FVector Start;
-	FVector ForwardVector;
-	FVector End;
-
-	FHitResult Hit;
-	
-	FComponentQueryParams DefaultComponentQueryParams;
-	FCollisionResponseParams DefaultResponseParam;
-
 
 protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
-
-	/** Action Function */
-	void OnAction();
-
-	/** Inspect Function */
-	void OnInspect();
-	void OnInspectReleased();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -127,11 +90,6 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-	// toggle player movement
-	void ToggleMovement();
-
-	// toggle holding item pickup
-	void ToggleItemPickup();
 	
 protected:
 	// APawn interface

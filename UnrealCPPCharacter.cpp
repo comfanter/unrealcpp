@@ -9,13 +9,12 @@
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SphereComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
-#include "DrawDebugHelpers.h"
+#include "XRMotionControllerBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -58,19 +57,11 @@ AUnrealCPPCharacter::AUnrealCPPCharacter()
 	FP_MuzzleLocation->SetupAttachment(FP_Gun);
 	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
 
-	HoldingComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HoldingComponent"));
-	HoldingComponent->RelativeLocation.X = 50.0f;
-	HoldingComponent->SetupAttachment(FP_MuzzleLocation);
-
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
-
-	CurrentItem = NULL;
-	bCanMove = true;
-	bInspecting = false;
 
 }
 
@@ -84,61 +75,6 @@ void AUnrealCPPCharacter::BeginPlay()
 
 	Mesh1P->SetHiddenInGame(false, true);
 
-	PitchMax = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax;
-	PitchMin = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin;
-
-}
-
-//Called every frame
-void AUnrealCPPCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	Start = FirstPersonCameraComponent->GetComponentLocation();
-	ForwardVector = FirstPersonCameraComponent->GetForwardVector();
-	End = ((ForwardVector * 200.f) + Start);
-
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
-
-	if(!bHoldingItem)
-	{
-		if(GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, DefaultComponentQueryParams, DefaultResponseParam)) 
-		{
-			if(Hit.GetActor()->GetClass()->IsChildOf(APickupAndRotateActor::StaticClass())) 
-			{				
-				CurrentItem = Cast<APickupAndRotateActor>(Hit.GetActor());
-			}
-		}
-		else
-		{
-			CurrentItem = NULL;
-		}
-	}
-
-	if(bInspecting)
-	{
-		if(bHoldingItem)
-		{
-			FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 90.0f, 0.1f));
-			HoldingComponent->SetRelativeLocation(FVector(0.0f, 50.0f, 50.0f));
-			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = 179.9000002f;
-			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = -179.9000002f;
-			CurrentItem->RotateActor();
-		}
-		else
-		{
-			FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 45.0f, 0.1f));
-		}
-	}
-	else 
-	{
-		FirstPersonCameraComponent->SetFieldOfView(FMath::Lerp(FirstPersonCameraComponent->FieldOfView, 90.0f, 0.1f));
-
-		if(bHoldingItem)
-		{
-			HoldingComponent->SetRelativeLocation(FVector(50.0f, 0.0f, 0.f));
-		}
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -155,13 +91,6 @@ void AUnrealCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AUnrealCPPCharacter::OnFire);
-
-	// Bind action event
-	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AUnrealCPPCharacter::OnAction);
-
-	// Bind Inspect event
-	PlayerInputComponent->BindAction("Inspect", IE_Pressed, this, &AUnrealCPPCharacter::OnInspect);
-	PlayerInputComponent->BindAction("Inspect", IE_Released, this, &AUnrealCPPCharacter::OnInspectReleased);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUnrealCPPCharacter::MoveForward);
@@ -218,7 +147,7 @@ void AUnrealCPPCharacter::OnFire()
 
 void AUnrealCPPCharacter::MoveForward(float Value)
 {
-	if (Value != 0.0f && bCanMove)
+	if (Value != 0.0f)
 	{
 		// add movement in that direction
 		AddMovementInput(GetActorForwardVector(), Value);
@@ -227,7 +156,7 @@ void AUnrealCPPCharacter::MoveForward(float Value)
 
 void AUnrealCPPCharacter::MoveRight(float Value)
 {
-	if (Value != 0.0f && bCanMove)
+	if (Value != 0.0f)
 	{
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
@@ -244,62 +173,4 @@ void AUnrealCPPCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
-
-void AUnrealCPPCharacter::OnAction()
-{
-	if(CurrentItem && !bInspecting)
-	{
-		ToggleItemPickup();
-	}
-}
-
-void AUnrealCPPCharacter::OnInspect()
-{
-	if(bHoldingItem)
-	{
-		LastRotation = GetControlRotation();
-		ToggleMovement();
-	}
-	else 
-	{
-		bInspecting = true;
-	}
-}
-
-void AUnrealCPPCharacter::OnInspectReleased()
-{
-	if (bInspecting && bHoldingItem) 
-	{
-		GetController()->SetControlRotation(LastRotation);
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMax = PitchMax;
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->ViewPitchMin = PitchMin;
-		ToggleMovement();
-	}
-	else 
-	{
-		bInspecting = false;
-	}
-}
-
-void AUnrealCPPCharacter::ToggleMovement()
-{
-	bCanMove = !bCanMove;
-	bInspecting = !bInspecting;
-	FirstPersonCameraComponent->bUsePawnControlRotation = !FirstPersonCameraComponent->bUsePawnControlRotation;
-	bUseControllerRotationYaw = !bUseControllerRotationYaw;
-}
-
-void AUnrealCPPCharacter::ToggleItemPickup()
-{
-	if(CurrentItem)
-	{
-		bHoldingItem = !bHoldingItem;
-		CurrentItem->Pickup();
-
-		if(!bHoldingItem)
-		{
-			CurrentItem = NULL;
-		}
-	}
 }

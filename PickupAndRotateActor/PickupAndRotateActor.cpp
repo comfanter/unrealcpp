@@ -11,6 +11,7 @@
 
 #include "PickupAndRotateActor.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APickupAndRotateActor::APickupAndRotateActor()
