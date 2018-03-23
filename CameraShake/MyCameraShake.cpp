@@ -6,17 +6,24 @@
 
 // Helpful Links
 // http://api.unrealengine.com/INT/API/Runtime/Engine/Camera/UCameraShake/index.html
+//
+// Great explanation of camera shake values
+// https://www.youtube.com/watch?v=Oice8gdpX6s
 
 #include "MyCameraShake.h"
 
 // Sets default values
 UMyCameraShake::UMyCameraShake()
 {
-    OscillationDuration = 2.0f;
-    OscillationBlendInTime = 0.1f;
-    OscillationBlendOutTime = 0.2f;
-    RotOscillation.Pitch.Amplitude = 10.0f;
-    RotOscillation.Pitch.Frequency = 10.0f;
+    OscillationDuration = 0.25f;
+    OscillationBlendInTime = 0.05f;
+    OscillationBlendOutTime = 0.05f;
+
+    RotOscillation.Pitch.Amplitude = FMath::RandRange(5.0f, 10.0f);
+    RotOscillation.Pitch.Frequency = FMath::RandRange(25.0f, 35.0f);
+
+    RotOscillation.Yaw.Amplitude = FMath::RandRange(5.0f, 10.0f);
+    RotOscillation.Yaw.Frequency = FMath::RandRange(25.0f, 35.0f);
 }
 
 
