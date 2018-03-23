@@ -25,5 +25,3 @@ UMyCameraShake::UMyCameraShake()
     RotOscillation.Yaw.Amplitude = FMath::RandRange(5.0f, 10.0f);
     RotOscillation.Yaw.Frequency = FMath::RandRange(25.0f, 35.0f);
 }
-
-
