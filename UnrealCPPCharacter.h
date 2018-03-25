@@ -66,9 +66,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UCameraShake> MyShake;
-
 protected:
 	
 	/** Fires a projectile. */
