@@ -420,7 +420,6 @@ void AUnrealCPPCharacter::UpdateHealth(float HealthChange)
 {
 	Health += HealthChange;
 	Health = FMath::Clamp(Health, 0.0f, FullHealth);
-	PreviousHealth = HealthPercentage;
 	HealthPercentage = Health/FullHealth;
 }
 
